@@ -4,216 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NEXTcalendar Prototype</title>
-  <style>
-    :root{
-      --bg:#f7f8fc;
-      --panel:#ffffff;
-      --panel2:#fbfcff;
-      --line:#dfe4ee;
-      --text:#1f2430;
-      --muted:#6b7280;
-      --blue:#4f7cff;
-      --blue2:#275ef6;
-      --green:#6bc06b;
-      --yellow:#f2c453;
-      --purple:#a78bfa;
-      --red:#ef6a6a;
-      --shadow:0 8px 26px rgba(24,39,75,.06);
-      --radius:16px;
-      --sidebar:290px;
-      --right:420px;
-      --bottom:120px;
-      --dayOutline:#1f2937;
-    }
-    [data-theme="dark"]{
-      --bg:#0f172a;
-      --panel:#111827;
-      --panel2:#0b1220;
-      --line:#263244;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --shadow:0 12px 30px rgba(0,0,0,.28);
-      --dayOutline:#f8fafc;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-    button,input,select,textarea{font:inherit}
-    .app{
-      height:100vh;
-      display:grid;
-      grid-template-columns: var(--sidebar) 1fr var(--right);
-      grid-template-rows: 62px 1fr var(--bottom);
-      gap:0;
-      overflow:hidden;
-    }
-    .topbar{
-      grid-column:1 / 4;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:10px 16px;
-      border-bottom:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.76), rgba(255,255,255,.55));
-      backdrop-filter: blur(10px);
-    }
-    [data-theme="dark"] .topbar{background:rgba(9,13,24,.82)}
-    .brand{display:flex;align-items:center;gap:14px;font-size:22px;font-weight:700}
-    .brand .logo{font-weight:800;letter-spacing:.2px}
-    .brand .logo span{color:var(--blue)}
-    .top-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
-    .seg{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
-    .seg button{border:0;background:transparent;padding:10px 16px;color:var(--muted);cursor:pointer}
-    .seg button.active{background:rgba(79,124,255,.12);color:var(--blue2);font-weight:700}
-    .pill{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow)}
-    .top-actions{display:flex;align-items:center;gap:10px}
-    .icon-btn{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow);color:var(--text)}
-    .avatar{width:34px;height:34px;border-radius:999px;background:linear-gradient(135deg,#6c63ff,#3ab7ff);display:grid;place-items:center;color:white;font-weight:700}
-
-    .sidebar,.rightbar,.footerbar,.calendarWrap,.centerpane{min-height:0}
-    .sidebar{
-      grid-row:2 / 4;
-      border-right:1px solid var(--line);
-      padding:16px 14px;
-      overflow:auto;
-    }
-    .sidebar .cta{
-      border:0;
-      width:100%;
-      padding:14px 18px;
-      border-radius:20px;
-      color:white;
-      background:linear-gradient(135deg,#4a7cff,#6d52ff);
-      box-shadow:0 14px 30px rgba(77,102,255,.24);
-      font-weight:700;
-      margin-bottom:14px;
-      cursor:pointer;
-    }
-    .hint{font-size:12px;color:var(--muted);text-align:center;margin:-2px 0 16px}
-    .section-title{font-size:12px;letter-spacing:.08em;color:var(--muted);margin:16px 10px 8px;text-transform:uppercase}
-    .nav{display:grid;gap:6px}
-    .nav button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:11px 12px;border-radius:12px;color:var(--text);cursor:pointer;text-align:left}
-    .nav button.active,.nav button:hover{background:rgba(79,124,255,.10);color:var(--blue2)}
-    .card{
-      background:var(--panel);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-    }
-    .trial{margin-top:18px}
-    .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}
-    .bar > div{height:100%;width:55%;background:linear-gradient(90deg,#4a7cff,#6d52ff)}
-    .small{font-size:12px;color:var(--muted)}
-    .appearance .row,.density .row{display:flex;gap:8px;flex-wrap:wrap}
-    .toggle{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;cursor:pointer;color:var(--text)}
-    .toggle.active{background:rgba(79,124,255,.10);border-color:rgba(79,124,255,.25);color:var(--blue2)}
-    .dropdown,.text-input,.textarea,.select{
-      width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:12px 12px;outline:none;
-    }
-    .textarea{min-height:120px;resize:vertical}
-
-    .centerpane{grid-column:2;grid-row:2;display:flex;flex-direction:column;overflow:hidden}
-    .calendar-shell{flex:1;display:grid;grid-template-rows:auto 1fr;gap:12px;padding:14px;overflow:hidden}
-    .monthbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .monthbar .title{font-size:16px;font-weight:700}
-    .calendar{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;min-height:0}
-    .calendar-grid{display:grid;grid-template-columns:72px repeat(7,1fr);height:100%;min-height:100%}
-    .timecol{border-right:1px solid var(--line);padding-top:34px}
-    .time{height:72px;font-size:12px;color:var(--muted);padding:8px 10px 0;text-align:right}
-    .dayhead{height:72px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted);position:relative}
-    .dayhead .num{font-size:24px;color:var(--text);line-height:1}
-    .dayhead.weekhighlight{color:var(--blue2);font-weight:700}
-    .dayhead.today .num{background:var(--blue2);color:#fff;width:30px;height:30px;border-radius:999px;display:grid;place-items:center}
-    .dayhead.today{outline:2px solid var(--dayOutline);outline-offset:-2px;border-radius:14px}
-    .daycol{position:relative;border-left:1px solid rgba(0,0,0,0);}
-    .gridlines{
-      position:absolute;inset:72px 0 0 72px;pointer-events:none;
-      background-image:linear-gradient(to bottom, transparent 0, transparent 71px, var(--line) 71px, var(--line) 72px);
-      background-size:100% 72px;
-      opacity:.55;
-    }
-    .event{
-      position:absolute;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:8px 10px;box-shadow:0 6px 14px rgba(14,21,38,.08);cursor:pointer;overflow:hidden;background:#fff;min-width:0;
-    }
-    .event.selected{outline:2px solid var(--dayOutline);outline-offset:1px}
-    .event .label{font-size:11px;color:rgba(0,0,0,.68);margin-bottom:4px;font-weight:700}
-    .event .title{font-size:13px;font-weight:700;line-height:1.2}
-    .event .meta{font-size:11px;color:rgba(0,0,0,.68);margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .event.purple{background:#e5d7ff}.event.green{background:#dff2d5}.event.blue{background:#dcebff}.event.yellow{background:#f8e2a2}.event.red{background:#ffd7d4}
-    .all-day-strip{position:absolute;left:72px;right:0;top:72px;height:32px;border-bottom:1px solid var(--line)}
-    .all-day-item{position:absolute;top:5px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700}
-    .all-day-item.purple{background:#e5d7ff}.all-day-item.green{background:#dff2d5}.all-day-item.yellow{background:#f8e2a2}
-    .selected-outline{
-      position:absolute;border:2px solid var(--dayOutline);border-radius:8px;pointer-events:none;
-    }
-
-    .rightbar{
-      grid-column:3;grid-row:2 / 4;border-left:1px solid var(--line);padding:14px;overflow:auto;background:rgba(255,255,255,.2)
-    }
-    .searchbox{display:flex;align-items:center;gap:8px;padding:12px 12px;border:1px solid var(--line);background:var(--panel);border-radius:14px;box-shadow:var(--shadow)}
-    .searchbox input{border:0;outline:none;background:transparent;color:var(--text);width:100%}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:14px;margin-top:12px}
-    .event-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .dot{width:14px;height:14px;border-radius:999px;display:inline-block;margin-right:8px}
-    .titleline{display:flex;align-items:center;gap:8px}
-    .menu{position:relative}
-    .menu-panel{position:absolute;right:0;top:38px;width:170px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:6px;display:none;z-index:9}
-    .menu-panel.open{display:block}
-    .menu-panel button{width:100%;border:0;background:transparent;padding:10px 10px;border-radius:10px;text-align:left;color:var(--text);cursor:pointer}
-    .menu-panel button:hover{background:rgba(79,124,255,.1)}
-    .details-list{display:grid;gap:8px;margin-top:10px}
-    .detail-row{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text)}
-    .detail-row .k{color:var(--muted);min-width:74px}
-    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px;background:var(--panel2)}
-    .inline-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer}
-    .btn.primary{background:linear-gradient(135deg,#4a7cff,#6d52ff);color:#fff;border:0}
-    .notice{font-size:12px;color:var(--muted)}
-    .section-divider{height:1px;background:var(--line);margin:14px 0}
-
-    .footerbar{
-      grid-column:2 / 4;grid-row:3;
-      padding:14px;
-      border-top:1px solid var(--line);
-      overflow:auto;
-    }
-    .footer-grid{display:grid;grid-template-columns:1.2fr 1.1fr .9fr 1fr 1fr 1fr;gap:12px;min-width:1200px}
-    .footer-card h4{margin:0 0 6px;font-size:14px}
-    .footer-card .big{font-size:15px;font-weight:700;margin-bottom:6px}
-    .footer-card .muted{font-size:12px;color:var(--muted)}
-    .footer-card .link{margin-top:10px;font-size:12px;color:var(--blue2);cursor:pointer}
-
-    .modal-backdrop{position:fixed;inset:0;background:rgba(10,15,25,.42);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}
-    .modal-backdrop.open{display:flex}
-    .modal{width:min(960px,100%);max-height:90vh;overflow:auto;background:var(--panel);border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.3);padding:18px}
-    .modal h2{margin:0 0 10px;font-size:20px}
-    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .label-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .label-item{padding:10px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--panel2);font-size:13px}
-    .label-item.active{outline:2px solid var(--blue2)}
-    .canvas-box{border:1px dashed var(--line);border-radius:16px;min-height:180px;display:grid;place-items:center;background:linear-gradient(135deg, rgba(79,124,255,.05), rgba(111,86,255,.04))}
-    .save-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-    .save-slot{height:68px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);display:grid;place-items:center;font-size:12px;color:var(--muted)}
-    .save-slot.filled{background:linear-gradient(135deg, rgba(79,124,255,.12), rgba(111,86,255,.10));color:var(--text);font-weight:700}
-    .trash{display:grid;gap:8px;margin-top:10px}
-    .confused{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
-
-    .density-compact .event .title{font-size:12px}.density-compact .event .meta{display:none}.density-compact .dayhead .num{font-size:20px}.density-compact .sidebar{padding:12px 10px}.density-compact .rightbar{padding:10px}.density-compact .footerbar{padding:10px}
-    .hidden{display:none !important}
-
-    @media (max-width: 1250px){
-      .app{grid-template-columns: 260px 1fr 350px}
-      .footer-grid{min-width:1100px}
-    }
-    @media (max-width: 1020px){
-      .app{grid-template-columns: 1fr;grid-template-rows:62px auto auto auto;overflow:auto}
-      .sidebar,.centerpane,.rightbar,.footerbar{grid-column:1;grid-row:auto}
-      .sidebar{border-right:0;border-bottom:1px solid var(--line)}
-      .rightbar{border-left:0;border-top:1px solid var(--line)}
-      .footer-grid{min-width:0;grid-template-columns:1fr 1fr}
-      .calendar{min-height:740px}
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 <div class="app" id="app" data-theme="light">
@@ -221,12 +12,12 @@
     <div class="brand"><span class="logo"><span>NEXT</span>calendar</span></div>
     <div class="top-controls">
       <div class="seg" aria-label="calendar view">
-        <button class="active">Day</button><button>Week</button><button>Month</button>
+        <button class="cal-layout-select" id="dayBtn">Day</button><button class="cal-layout-select active" id="weekBtn">Week</button><button class="cal-layout-select" id="monthBtn">Month</button>
       </div>
-      <button class="icon-btn">Today</button>
-      <button class="icon-btn">‹</button>
-      <button class="icon-btn">›</button>
-      <div class="pill">May 12 – May 18, 2025</div>
+      <button class="icon-btn" id="todayBtn">Today</button>
+      <button class="icon-btn" id="prev">‹</button>
+      <button class="icon-btn" id="next">›</button>
+      <div class="pill" id="dateRange"></div>
     </div>
     <div class="top-actions">
       <div class="pill">🔥 8 Day Streak</div>
@@ -235,11 +26,9 @@
       <div class="avatar">JD</div>
     </div>
   </header>
-
   <aside class="sidebar">
     <button class="cta" id="openAddModal">✦ Add with AI</button>
     <div class="hint">Just type. AI does the rest.</div>
-
     <div class="section-title">Tools</div>
     <div class="nav">
       <button class="active">📅 Calendar</button>
@@ -252,7 +41,6 @@
       <button>👥 Organization</button>
       <button>⚙ Settings</button>
     </div>
-
     <div class="card trial">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-weight:700">Free Trial</div>
@@ -262,7 +50,6 @@
       <div class="small">Upgrade anytime for more powerful features.</div>
       <button class="btn primary" style="width:100%;margin-top:10px">View Plans</button>
     </div>
-
     <div class="card appearance" style="margin-top:14px">
       <div style="font-weight:700;margin-bottom:8px">Appearance</div>
       <div class="row">
@@ -276,14 +63,12 @@
         <button class="toggle" id="densityCompact">Compact</button>
       </div>
     </div>
-
     <div class="card" style="margin-top:14px">
       <div style="font-weight:700;margin-bottom:8px">Streak System</div>
       <div style="font-size:13px;color:var(--muted)">You are on fire!</div>
       <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:13px"><span>8 day streak</span><span>Best: 21 days</span></div>
     </div>
   </aside>
-
   <main class="centerpane">
     <div class="calendar-shell">
       <div class="monthbar">
@@ -294,44 +79,56 @@
           <button class="btn" id="toggleOrg">Org Communication: On</button>
         </div>
       </div>
-
       <section class="calendar" id="calendar">
-        <div class="calendar-grid" id="calendarGrid">
-          <div class="timecol"></div>
-          <div class="dayhead"><div>MON</div><div class="num">12</div></div>
-          <div class="dayhead"><div>TUE</div><div class="num">13</div></div>
-          <div class="dayhead today weekhighlight"><div>WED</div><div class="num">14</div></div>
-          <div class="dayhead"><div>THU</div><div class="num">15</div></div>
-          <div class="dayhead"><div>FRI</div><div class="num">16</div></div>
-          <div class="dayhead"><div>SAT</div><div class="num">17</div></div>
-          <div class="dayhead"><div>SUN</div><div class="num">18</div></div>
-
-          <div class="timecol" id="times"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
-          <div class="daycol"></div>
+        <!-- WEEK VIEW -->
+        <div id="weekLayout">
+          <div id="weekCalendarGrid" style="display:flex;flex-direction:row;">
+            <div class="timecol" id="weekTimes" style="width:80px;margin-top:72px;"></div>
+            <div class="daysWrap" id="weekDaysWrap"></div>
+          </div>
+          <div class="gridlines"></div>
+          <div class="event-columns" id="weekEventsLayer"></div>
         </div>
-        <div class="gridlines"></div>
-        <div class="all-day-strip">
-          <div class="all-day-item purple" style="left: 34%;">Project Due</div>
-          <div class="all-day-item green" style="left: 49%;">Mom’s Birthday</div>
-          <div class="all-day-item yellow" style="left: 74%;">Team Retreat</div>
+        <!-- DAY VIEW -->
+        <div id="dayLayout" style="display:none; height:100%;">
+          <div style="display:flex;flex-direction:row;" id="dayCalendarGrid">
+            <div class="timecol" style="width:80px;margin-top:72px;" id="dayTimes"></div>
+            <div class="daysWrap">
+              <div class="dayhead today weekhighlight" id="dayHeader"></div>
+            </div>
+          </div>
+          <div class="gridlines"></div>
+          <div class="all-day-strip" id="dayAllDayStrip"></div>
+          <div class="event-columns" id="dayEventsLayer"></div>
         </div>
-        <div id="eventsLayer"></div>
+        <!-- MONTH VIEW -->
+        <div id="monthLayout" style="display:none; height:100%; padding:14px;">
+          <div class="card" style="height:100%; overflow:auto;">
+            <div class="monthbar">
+              <div class="title">Month</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px;">
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>MON</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>TUE</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>WED</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>THU</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>FRI</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>SAT</div></div>
+              <div class="dayhead" style="height:auto;padding:10px 0;"><div>SUN</div></div>
+            </div>
+            <div id="monthGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px;">
+              <!-- cells get added by JS -->
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </main>
-
   <aside class="rightbar">
     <div class="searchbox">
       🔎 <input id="typeInput" placeholder="Add event by typing" />
       <button class="btn primary" id="analyzeBtn">AI</button>
     </div>
-
     <div class="panel" id="selectedPanel">
       <div class="event-title-row">
         <div class="titleline"><span class="dot" id="selectedDot"></span><div style="font-weight:800;font-size:18px" id="selectedTitle">Planning Session</div></div>
@@ -368,7 +165,6 @@
         <button class="btn primary" id="openEditModal">Edit Event</button>
       </div>
     </div>
-
     <div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-weight:700">Label (AI Suggested)</div>
@@ -384,7 +180,6 @@
       </select>
       <div class="inline-controls"><button class="btn">Override Label</button></div>
     </div>
-
     <div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-weight:700">Troubleshooting (AI Confused?)</div>
@@ -392,13 +187,12 @@
       </div>
       <div class="notice">Review things the AI was unsure about.</div>
       <div class="trash">
-        <div class="confused"><span>“project x”</span><button class="btn">Confirm Event</button></div>
-        <div class="confused"><span>“budget”</span><button class="btn">Confirm Label</button></div>
-        <div class="confused"><span>“until Friday”</span><button class="btn">Confirm Recurring</button></div>
+        <div class="confused"><span>"project x"</span><button class="btn">Confirm Event</button></div>
+        <div class="confused"><span>"budget"</span><button class="btn">Confirm Label</button></div>
+        <div class="confused"><span>"until Friday"</span><button class="btn">Confirm Recurring</button></div>
       </div>
       <div class="inline-controls"><button class="btn primary" id="openTroubleshooting2">Review Now</button></div>
     </div>
-
     <div class="panel">
       <div style="font-weight:700;margin-bottom:8px">Security / Visibility</div>
       <select class="select">
@@ -413,7 +207,6 @@
       </select>
       <div class="inline-controls"><button class="btn">Allow interorg. communication</button></div>
     </div>
-
     <div class="panel">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div style="font-weight:700">Reminders</div>
@@ -422,8 +215,7 @@
       <select class="select" style="margin-top:10px"><option>15 minutes before</option><option>1 hour before</option><option>1 day before</option></select>
     </div>
   </aside>
-
-  <footer class="footerbar">
+  <!-- <footer class="footerbar">
     <div class="footer-grid">
       <div class="card footer-card"><h4>AI Agenda &amp; To‑Do</h4><div class="big">Build a list from today</div><div class="muted">Button to tell what is on agenda for the day and create a to-do list.</div><div class="link">View Agenda</div></div>
       <div class="card footer-card"><h4>Add by Typing (AI)</h4><div class="big">Write a note card</div><div class="muted">AI analyzes it and converts it into event / due date / task automatically.</div><div class="link">Open Composer</div></div>
@@ -432,9 +224,8 @@
       <div class="card footer-card"><h4>Recommendations</h4><div class="big">Feedback &amp; bugs</div><div class="muted">Users can suggest features or report issues after the free trial.</div><div class="link">Go to Feedback</div></div>
       <div class="card footer-card"><h4>Pricing / Trial</h4><div class="big">7‑day free trial</div><div class="muted">Pricing varies by plan, organization, and custom features.</div><div class="link">Learn more</div></div>
     </div>
-  </footer>
+  </footer> -->
 </div>
-
 <!-- Add Event Modal -->
 <div class="modal-backdrop" id="addModal">
   <div class="modal">
@@ -461,7 +252,6 @@
     </div>
   </div>
 </div>
-
 <!-- Edit Event Modal -->
 <div class="modal-backdrop" id="editModal">
   <div class="modal">
@@ -487,7 +277,6 @@
     <div class="inline-controls" style="margin-top:12px"><button class="btn primary" data-close="editModal">Save Changes</button><button class="btn" data-close="editModal">Cancel</button></div>
   </div>
 </div>
-
 <!-- Troubleshooting Modal -->
 <div class="modal-backdrop" id="troubleModal">
   <div class="modal">
@@ -501,7 +290,6 @@
     <div class="inline-controls" style="margin-top:12px"><button class="btn primary" data-close="troubleModal">Done</button></div>
   </div>
 </div>
-
 <!-- Labels Modal -->
 <div class="modal-backdrop" id="labelsModal">
   <div class="modal">
@@ -518,7 +306,6 @@
     <div class="inline-controls" style="margin-top:12px"><button class="btn">Add Label</button><button class="btn">Rename</button><button class="btn">Delete</button><button class="btn primary" data-close="labelsModal">Done</button></div>
   </div>
 </div>
-
 <!-- Customize Modal -->
 <div class="modal-backdrop" id="customizeModal">
   <div class="modal">
@@ -538,7 +325,6 @@
     <div class="inline-controls" style="margin-top:12px"><button class="btn primary" data-close="customizeModal">Done</button></div>
   </div>
 </div>
-
 <!-- Agenda Modal -->
 <div class="modal-backdrop" id="agendaModal">
   <div class="modal">
@@ -548,16 +334,17 @@
       <div>1. Prepare notes for Planning Session</div>
       <div>2. Send follow-up messages</div>
       <div>3. Review calendar gaps for organization sync</div>
-      <div>4. Draft tomorrow’s priorities</div>
+      <div>4. Draft tomorrow's priorities</div>
     </div>
     <div class="inline-controls" style="margin-top:12px"><button class="btn primary" data-close="agendaModal">Done</button></div>
   </div>
 </div>
-
 <script>
   const app = document.getElementById('app');
-  const times = document.getElementById('times');
-  const eventsLayer = document.getElementById('eventsLayer');
+  const weekTimes = document.getElementById('weekTimes');
+  const dayTimes = document.getElementById('dayTimes');
+  const weekEventsLayer = document.getElementById('weekEventsLayer');
+  const dayEventsLayer = document.getElementById('dayEventsLayer');
   const menuBtn = document.getElementById('menuBtn');
   const menuPanel = document.getElementById('menuPanel');
   const selectedTitle = document.getElementById('selectedTitle');
@@ -584,52 +371,226 @@
   const labelSelect = document.getElementById('labelSelect');
   const toggleOrg = document.getElementById('toggleOrg');
   const selectedPanel = document.getElementById('selectedPanel');
+  const dayWeekday = document.getElementById('dayWeekday');
+  const dayDateNum = document.getElementById('dayDateNum');
+  const dayAllDayStrip = document.getElementById('dayAllDayStrip');
+  const calendarEl = document.getElementById('calendar');
 
-  const hours = Array.from({length: 12}, (_,i)=>8+i);
-  times.innerHTML = hours.map(h => `<div class="time">${h===12 ? '12 PM' : h<12 ? h + ' AM' : (h-12) + ' PM'}</div>`).join('');
+  const BASE_HOUR_HEIGHT = 72;
+  const BASE_HEADER_OFFSET = 72;
+
+  let zoomLevel = 1;
+  const MIN_ZOOM = 0.5;
+  const MAX_ZOOM = 2.5;
+
+  function getHourHeight() {
+    return BASE_HOUR_HEIGHT * zoomLevel;
+  }
+
+  function getHeaderOffset() {
+    return BASE_HEADER_OFFSET * zoomLevel;
+  }
+  let selectedDay = new Date();
+  const WEEK_START = new Date(2025, 4, 12);
+  const dayBtn = document.getElementById("dayBtn");
+  const weekBtn = document.getElementById("weekBtn");
+  const monthBtn = document.getElementById("monthBtn");
+  const dayLayout = document.getElementById("dayLayout");
+  const weekLayout = document.getElementById("weekLayout");
+  const monthLayout = document.getElementById("monthLayout");
+  const monthGrid = document.getElementById("monthGrid");
+  const buttons = [dayBtn, weekBtn, monthBtn];
+  let currentLayout = "week";
+  
+  const weekDaysWrap = document.getElementById("weekDaysWrap");
+  const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  let t = new Date();
+  const today = new Date();
+  t.setDate(t.getDate() - t.getDay());
+
+  function scrollToCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    const hourHeight = getHourHeight();
+    const headerOffset = getHeaderOffset();
+
+    const nowPx = headerOffset + (hours + minutes / 60) * hourHeight;
+    const scrollTarget = nowPx - calendarEl.clientHeight / 2;
+    calendarEl.scrollTop = Math.max(0, scrollTarget);
+  }
+
+  const hours_arr = Array.from({ length: 24 }, (_, i) => i);
+  function renderTimes(target) {
+    const hourHeight = getHourHeight();
+
+    target.innerHTML = hours_arr.map(h => {
+      const hour12 = h % 12 || 12;
+      const period = h < 12 ? "AM" : "PM";
+      return `<div class="time" style="height:${hourHeight}px">${hour12}:00 ${period}</div>`;
+    }).join('');
+  }
+  renderTimes(weekTimes);
+  renderTimes(dayTimes);
 
   const events = [
-    {id:1, day:1, start:9, end:10.5, title:'Team Standup', time:'9:00 – 9:30 AM', where:'Google Meet', color:'blue', desc:'Daily sync with the team.', top: 72 + (9-8)*72, height: 36, left:'1.5%', width:'12.5%', label:'Event'},
-    {id:2, day:2, start:10, end:11, title:'Client Call', time:'10:00 – 11:00 AM', where:'Zoom', color:'green', desc:'Client review and feedback call.', top: 72 + (10-8)*72, height: 72, left:'15.8%', width:'12.5%', label:'Event'},
-    {id:3, day:3, start:9, end:10.5, title:'Planning Session', time:'9:00 – 10:30 AM', where:'Conference Room B', color:'yellow', desc:'Finalize Q2 roadmap and assign tasks.', top: 72 + (9-8)*72, height: 108, left:'30.1%', width:'12.5%', label:'Event'},
-    {id:4, day:4, start:12, end:13, title:'Lunch & Learn', time:'12:00 – 1:00 PM', where:'', color:'purple', desc:'Internal knowledge-sharing session.', top: 72 + (12-8)*72, height: 72, left:'44.4%', width:'12.5%', label:'Reminder'},
-    {id:5, day:5, start:9, end:10, title:'Design Review', time:'9:00 – 10:00 AM', where:'Google Meet', color:'blue', desc:'Review design changes and approvals.', top: 72 + (9-8)*72, height: 72, left:'58.7%', width:'12.5%', label:'Event'},
-    {id:6, day:5, start:14, end:14.5, title:'1:1 with Manager', time:'2:00 – 2:30 PM', where:'', color:'green', desc:'One-on-one catch-up.', top: 72 + (14-8)*72, height: 36, left:'58.7%', width:'12.5%', label:'Task'},
-    {id:7, day:3, start:13, end:14, title:'Product Demo', time:'1:00 – 2:00 PM', where:'Google Meet', color:'blue', desc:'Demo the product to stakeholders.', top: 72 + (13-8)*72, height: 72, left:'30.1%', width:'12.5%', label:'Event'},
-    {id:8, day:1, start:13, end:14, title:'Marketing Sync', time:'1:00 – 2:00 PM', where:'Zoom', color:'purple', desc:'Marketing weekly sync.', top: 72 + (13-8)*72, height: 72, left:'1.5%', width:'12.5%', label:'Recurring Event'},
-    {id:9, day:2, start:15, end:16, title:'Project Deadline', time:'3:00 PM', where:'', color:'red', desc:'Deadline milestone due today.', top: 72 + (15-8)*72, height: 72, left:'15.8%', width:'12.5%', label:'Due Date'},
-    {id:10, day:1, start:16, end:17, title:'Gym', time:'4:00 – 5:00 PM', where:'Personal', color:'yellow', desc:'Personal workout block.', top: 72 + (16-8)*72, height: 72, left:'1.5%', width:'12.5%', label:'Task'},
-    {id:11, day:4, start:16, end:17, title:'Team Retrospective', time:'4:00 – 5:00 PM', where:'Zoom', color:'blue', desc:'Retro meeting with the team.', top: 72 + (16-8)*72, height: 72, left:'44.4%', width:'12.5%', label:'Event'}
-  ];
+    { id: 1,  start: new Date(2026, 5, 9, 9, 0),  end: new Date(2026, 5, 9, 10, 30), title: 'Team Standup',        time: '9:00 – 9:30 AM',  where: 'Google Meet',      color: 'blue',   desc: 'Daily sync with the team.',            label: 'Event' },
+    { id: 2,  start: new Date(2026, 5, 10, 10, 0), end: new Date(2026, 5, 10, 11, 0),  title: 'Client Call',          time: '10:00 – 11:00 AM', where: 'Zoom',              color: 'green',  desc: 'Client review and feedback call.',     label: 'Event' },
+    { id: 3,  start: new Date(2026, 5, 11, 9, 0),  end: new Date(2026, 5, 11, 10, 30), title: 'Planning Session',     time: '9:00 – 10:30 AM',  where: 'Conference Room B', color: 'yellow', desc: 'Finalize Q2 roadmap and assign tasks.',label: 'Event' },
+    { id: 4,  start: new Date(2026, 5, 12, 12, 0), end: new Date(2026, 5, 12, 13, 0),  title: 'Lunch & Learn',        time: '12:00 – 1:00 PM',  where: '',                  color: 'purple', desc: 'Internal knowledge-sharing session.',  label: 'Reminder' },
+    { id: 5,  start: new Date(2026, 5, 13, 9, 0),  end: new Date(2026, 5, 13, 10, 0),  title: 'Design Review',        time: '9:00 – 10:00 AM',  where: 'Google Meet',      color: 'blue',   desc: 'Review design changes and approvals.', label: 'Event' },
+    { id: 6,  start: new Date(2026, 5, 13, 14, 0), end: new Date(2026, 5, 13, 14, 30), title: '1:1 with Manager',     time: '2:00 – 2:30 PM',   where: '',                  color: 'green',  desc: 'One-on-one catch-up.',                 label: 'Task' },
+    { id: 7,  start: new Date(2026, 5, 11, 13, 0), end: new Date(2026, 5, 11, 14, 0),  title: 'Product Demo',         time: '1:00 – 2:00 PM',   where: 'Google Meet',      color: 'blue',   desc: 'Demo the product to stakeholders.',    label: 'Event' },
+    { id: 8,  start: new Date(2026, 5, 9, 13, 0),  end: new Date(2026, 5, 9, 14, 0),  title: 'Marketing Sync',        time: '1:00 – 2:00 PM',   where: 'Zoom',              color: 'purple', desc: 'Marketing weekly sync.',               label: 'Recurring Event' },
+    { id: 9,  start: new Date(2026, 5, 10, 15, 0), end: new Date(2026, 5, 10, 16, 0),  title: 'Project Deadline',     time: '3:00 PM',            where: '',                  color: 'red',    desc: 'Deadline milestone due today.',        label: 'Due Date' },
+    { id: 10, start: new Date(2026, 5, 9, 16, 0),  end: new Date(2026, 5, 9, 17, 0),  title: 'Gym',                  time: '4:00 – 5:00 PM',    where: 'Personal',          color: 'yellow', desc: 'Personal workout block.',              label: 'Task' },
+    { id: 11, start: new Date(2026, 5, 12, 16, 0), end: new Date(2026, 5, 12, 17, 0),  title: 'Team Retrospective',   time: '4:00 – 5:00 PM',    where: 'Zoom',              color: 'blue',   desc: 'Retro meeting with the team.',         label: 'Event' }
+];
 
-  function colorHex(c){return {blue:'#dcebff', green:'#dff2d5', yellow:'#f8e2a2', purple:'#e5d7ff', red:'#ffd7d4'}[c] || '#fff'}
-  function textColor(c){return '#1f2430'}
-  function renderEvents(){
-    eventsLayer.innerHTML = '';
-    events.forEach(ev => {
+function colorHex(c) {
+  return {
+    blue: '#dcebff',
+    green: '#dff2d5',
+    yellow: '#f8e2a2',
+    purple: '#e5d7ff',
+    red: '#ffd7d4'
+  }[c] || '#fff';
+}
+
+function addDays(base, days) {
+  const d = new Date(base);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function sameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() &&
+         a.getMonth() === b.getMonth() &&
+         a.getDate() === b.getDate();
+}
+
+function getDateForOffset(offset) {
+  // selectedDay is the number of days after t
+  return addDays(startOfDay(t), offset);
+}
+
+function formatDayHeader(date) {
+  return {
+    weekday: date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase(),
+    dayNum: date.getDate()
+  };
+}
+
+function getStartHour(date) {
+  return date.getHours() + date.getMinutes() / 60;
+}
+
+function getTop(ev) {
+  const startHour = getStartHour(ev.start);
+  return getHeaderOffset() + (startHour * getHourHeight());
+}
+
+function getHeight(ev) {
+  const startHour = getStartHour(ev.start);
+  const endHour = getStartHour(ev.end);
+  const duration = endHour - startHour;
+  return Math.max(duration * getHourHeight() - 4, 28);
+}
+
+function renderWeekView() {
+  const endDate = new Date(t);
+  endDate.setDate(endDate.getDate() + 6);
+
+  document.getElementById("dateRange").innerHTML =
+    `${t.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+  weekDaysWrap.innerHTML = '';
+  weekEventsLayer.innerHTML = '';
+
+  for (let i = 0; i < 7; i++) {
+    const date = addDays(startOfDay(t), i);
+    const isToday = sameDay(date, today);
+
+    weekDaysWrap.innerHTML += `
+      <div class="dayhead${isToday ? ' today weekhighlight' : ''}">
+        <div>${date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}</div>
+        <div class="num">${date.getDate()}</div>
+      </div>
+    `;
+
+    const col = document.createElement('div');
+    col.className = 'event-column';
+    weekEventsLayer.appendChild(col);
+
+    events
+      .filter(ev => sameDay(ev.start, date))
+      .forEach(ev => {
+        const el = document.createElement('div');
+        el.className = `calendar-event ${ev.color}`;
+        el.dataset.id = ev.id;
+        el.style.top = getTop(ev) + 'px';
+        el.style.height = getHeight(ev) + 'px';
+        el.innerHTML = `
+          <div class="title" style="color:#000">${ev.title}</div>
+          <div class="meta">${ev.time}${ev.where ? ' · ' + ev.where : ''}</div>
+        `;
+        el.addEventListener('click', () => selectEvent(ev.id));
+        col.appendChild(el);
+      });
+  }
+}
+
+function renderDayView() {
+  document.getElementById("dateRange").innerHTML =`${t.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+  const date = selectedDay;
+  const header = formatDayHeader(selectedDay);
+  document.getElementById('dayHeader').innerHTML = `
+    <div>${header.weekday}</div><div class="num">${header.dayNum}</div>
+  `;
+
+  dayEventsLayer.innerHTML = '';
+  dayAllDayStrip.innerHTML = '';
+
+  const col = document.createElement('div');
+  col.className = 'event-column';
+  dayEventsLayer.appendChild(col);
+
+  events
+    .filter(ev => sameDay(ev.start, date))
+    .forEach(ev => {
       const el = document.createElement('div');
-      el.className = `event ${ev.color}`;
+      el.className = `calendar-event ${ev.color}`;
       el.dataset.id = ev.id;
-      el.style.left = `calc(${ev.left} + 2px)`;
-      el.style.width = `calc(${ev.width} - 6px)`;
-      el.style.top = ev.top + 'px';
-      el.style.height = ev.height + 'px';
+      el.style.top = getTop(ev) + 'px';
+      el.style.height = getHeight(ev) + 'px';
       el.innerHTML = `
         <div class="label">${ev.label}</div>
         <div class="title">${ev.title}</div>
         <div class="meta">${ev.time}${ev.where ? ' · ' + ev.where : ''}</div>
       `;
       el.addEventListener('click', () => selectEvent(ev.id));
-      eventsLayer.appendChild(el);
+      col.appendChild(el);
     });
-  }
-  renderEvents();
+}
 
-  function selectEvent(id){
-    const ev = events.find(e=>e.id===id);
-    document.querySelectorAll('.event').forEach(node=>node.classList.toggle('selected', Number(node.dataset.id)===id));
+  renderWeekView();
+  renderDayView();
+
+  let selectedEventId = null;
+
+  function selectEvent(id) {
+    const ev = events.find(e => e.id === id);
+    selectedEventId = id;
+
+    // do NOT change selectedDay here
+    // selectedDay = ev.start;
+
     selectedTitle.textContent = ev.title;
-    selectedWhen.textContent = `${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][ev.day-1] || 'Wed'}, May ${11+ev.day} · ${ev.time}`;
+    selectedWhen.textContent = `${ev.start.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})} · ${ev.time}`;
     selectedWhere.textContent = ev.where || 'No location';
     selectedDesc.textContent = ev.desc;
     selectedDot.style.background = colorHex(ev.color);
@@ -637,6 +598,9 @@
     document.getElementById('editTitle').value = ev.title;
     document.getElementById('editDetails').value = ev.desc;
     document.getElementById('editLabel').value = ev.label;
+
+    if (currentLayout === "day") renderDayView();
+    if (currentLayout === "week") renderWeekView();
   }
   selectEvent(3);
 
@@ -646,6 +610,7 @@
 
   function openModal(m){ m.classList.add('open'); }
   function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
   document.getElementById('openAddModal').onclick = () => openModal(addModal);
   document.getElementById('openEditModal').onclick = () => openModal(editModal);
   document.getElementById('openTroubleshooting').onclick = () => openModal(troubleModal);
@@ -654,72 +619,169 @@
   document.getElementById('openCustomize').onclick = () => openModal(customizeModal);
   document.getElementById('addAgendaBtn').onclick = () => openModal(agendaModal);
   document.querySelectorAll('[data-close]').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.close)));
-  [addModal, editModal, troubleModal, labelsModal, customizeModal, agendaModal].forEach(m => m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); }));
+  [addModal,editModal,troubleModal,labelsModal,customizeModal,agendaModal].forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
 
   document.getElementById('parseNoteBtn').addEventListener('click', () => {
     const text = noteCard.value.toLowerCase();
     const recurring = /recurring|every|until/.test(text);
     const due = /due|deadline|by /.test(text);
     const meeting = /meet|call|zoom|google meet/.test(text);
-    aiType.textContent = recurring ? 'Recurring Event' : due ? 'Due Date' : meeting ? 'Event' : 'Task';
-    aiLabel.textContent = text.includes('lunch') ? 'Lunch' : text.includes('team') ? 'Team Item' : 'Custom Item';
-    aiTime.textContent = text.includes('friday') ? 'Fri 12:00 PM' : 'AI-detected time';
+    aiType.textContent = recurring?'Recurring Event':due?'Due Date':meeting?'Event':'Task';
+    aiLabel.textContent = text.includes('lunch')?'Lunch':text.includes('team')?'Team Item':'Custom Item';
+    aiTime.textContent = text.includes('friday')?'Fri 12:00 PM':'AI-detected time';
     aiDesc.textContent = 'AI parsed your note, inferred the calendar type, and can place it automatically.';
   });
 
   themeBtn.addEventListener('click', () => {
-    const current = app.dataset.theme;
-    app.dataset.theme = current === 'dark' ? 'light' : 'dark';
+    document.body.dataset.theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
   });
   document.querySelectorAll('[data-theme-set]').forEach(btn => btn.addEventListener('click', () => {
     document.querySelectorAll('[data-theme-set]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    if (btn.dataset.themeSet === 'auto') {
-      app.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if(btn.dataset.themeSet==='auto'){
+      document.body.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
     } else {
-      app.dataset.theme = btn.dataset.themeSet;
+      document.body.dataset.theme = btn.dataset.themeSet;
     }
   }));
 
-  densityFit.addEventListener('click', () => {
-    densityFit.classList.add('active'); densityCompact.classList.remove('active'); app.classList.remove('density-compact');
-  });
-  densityCompact.addEventListener('click', () => {
-    densityCompact.classList.add('active'); densityFit.classList.remove('active'); app.classList.add('density-compact');
-  });
-
-  document.getElementById('voiceBtn').addEventListener('click', () => alert('Voiceover mode: “Planning Session on Wednesday at 9 AM.”'));
+  densityFit.addEventListener('click', () => { densityFit.classList.add('active'); densityCompact.classList.remove('active'); app.classList.remove('density-compact'); });
+  densityCompact.addEventListener('click', () => { densityCompact.classList.add('active'); densityFit.classList.remove('active'); app.classList.add('density-compact'); });
+  document.getElementById('voiceBtn').addEventListener('click', () => alert('Voiceover mode: "Planning Session on Wednesday at 9 AM."'));
   toggleOrg.addEventListener('click', () => {
     const on = toggleOrg.textContent.includes('On');
     toggleOrg.textContent = on ? 'Org Communication: Off' : 'Org Communication: On';
   });
-
   labelGrid.querySelectorAll('.label-item').forEach(item => item.addEventListener('click', () => {
     labelGrid.querySelectorAll('.label-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
   }));
-
   for(let i=1;i<=10;i++){
     const s = document.createElement('div');
-    s.className = 'save-slot' + (i<=3 ? ' filled' : '');
-    s.textContent = i<=3 ? `Save ${i}` : `Empty ${i}`;
+    s.className = 'save-slot'+(i<=3?' filled':'');
+    s.textContent = i<=3?`Save ${i}`:`Empty ${i}`;
     saveGrid.appendChild(s);
   }
-
   document.getElementById('analyzeBtn').addEventListener('click', () => {
     const t = document.getElementById('typeInput').value.trim();
-    if (!t) return alert('Type something first.');
+    if(!t) return alert('Type something first.');
     document.getElementById('noteCard').value = t;
     openModal(addModal);
     document.getElementById('parseNoteBtn').click();
   });
-
-  // Demo interorg / parental control style helper area, kept inside interface for completeness.
   document.querySelectorAll('.confused .btn').forEach(btn => btn.addEventListener('click', e => {
-    e.stopPropagation();
-    btn.textContent = 'Confirmed';
-    btn.disabled = true;
+    e.stopPropagation(); btn.textContent='Confirmed'; btn.disabled=true;
   }));
+
+  function showLayout(view) {
+    buttons.forEach(btn => btn.classList.remove("active"));
+    currentLayout = view;
+    dayLayout.style.display = "none";
+    weekLayout.style.display = "none";
+    monthLayout.style.display = "none";
+
+    if (view === "day") {
+      dayBtn.classList.add("active");
+      dayLayout.style.display = "block";
+      renderDayView();
+    } else if (view === "week") {
+      weekBtn.classList.add("active");
+      weekLayout.style.display = "block";
+      renderWeekView();
+    } else if (view === "month") {
+      monthBtn.classList.add("active");
+      monthLayout.style.display = "block";
+    }
+
+    // Scroll to current time (centered) for time-based views
+    // Use requestAnimationFrame to ensure layout has rendered before measuring
+    if (view === "day" || view === "week") {
+      requestAnimationFrame(() => scrollToCurrentTime());
+    }
+  }
+
+  dayBtn.addEventListener("click", () => showLayout("day"));
+  weekBtn.addEventListener("click", () => showLayout("week"));
+  monthBtn.addEventListener("click", () => showLayout("month"));
+
+  for (let i = 1; i <= 35; i++) {
+    const cell = document.createElement("div");
+    cell.className = "month-cell";
+    cell.innerHTML = `<strong>${i}</strong>`;
+    monthGrid.appendChild(cell);
+  }
+
+  // Initial load — week view
+  showLayout("week");
+  
+  document.getElementById("next").addEventListener("click",()=>{
+    if (currentLayout==="week") {
+      t.setDate(t.getDate() + 7);
+      selectedDay.setDate(selectedDay.getDate() + 7);
+      renderWeekView();
+    } else if (currentLayout==="day") {
+      selectedDay.setDate(selectedDay.getDate() + 1);
+      renderDayView();
+    }
+  });
+  document.getElementById("prev").addEventListener("click",()=>{
+    if (currentLayout==="week") {
+      t.setDate(t.getDate() - 7);
+      selectedDay.setDate(selectedDay.getDate() - 7);
+      renderWeekView();
+    } else if (currentLayout==="day") {
+      selectedDay.setDate(selectedDay.getDate() - 1);
+      renderDayView();
+    }
+  });
+  function applyZoom() {
+    const hourHeight = getHourHeight();
+    document.body.style.setProperty('--hour-height', `${hourHeight}px`);
+
+    renderTimes(weekTimes);
+    renderTimes(dayTimes);
+
+    if (currentLayout === "day") {
+      renderDayView();
+    } else if (currentLayout === "week") {
+      renderWeekView();
+    }
+  }
+
+  function setZoom(nextZoom) {
+    const prevHourHeight = getHourHeight();
+    const prevScrollTop = calendarEl.scrollTop;
+
+    zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom));
+
+    applyZoom();
+
+    const nextHourHeight = getHourHeight();
+
+    requestAnimationFrame(() => {
+      calendarEl.scrollTop = prevHourHeight === 0
+        ? prevScrollTop
+        : prevScrollTop * (nextHourHeight / prevHourHeight);
+    });
+  }
+  calendarEl.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey) return;   // Ctrl + mouse wheel to zoom
+    e.preventDefault();
+
+    const step = e.deltaY < 0 ? 0.1 : -0.1;
+    setZoom(zoomLevel + step);
+  }, { passive: false });
+  document.getElementById("todayBtn").addEventListener("click",()=>{
+    if (currentLayout==="week") {
+      t = new Date();
+      t.setDate(t.getDate() - t.getDay());
+      selectedDay.setDate(t.getDate() + selectedDay.getDay());
+      renderWeekView();
+    } else if (currentLayout==="day") {
+      selectedDay = new Date(today);
+      renderDayView();
+    }
+  })
 </script>
 </body>
 </html>
