@@ -50,6 +50,7 @@
     }
     [data-theme="dark"] .topbar{background:rgba(9,13,24,.82)}
     .brand{display:flex;align-items:center;gap:14px;font-size:22px;font-weight:700}
+    .brand-icon{width:34px;height:34px;flex-shrink:0}
     .brand .logo{font-weight:800;letter-spacing:.2px}
     .brand .logo span{color:var(--blue)}
     .top-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
@@ -353,3 +354,6 @@
       flex: 1;
       min-width: 0;
     }
+
+
+ 
