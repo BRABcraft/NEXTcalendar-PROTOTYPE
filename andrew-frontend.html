@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NEXTCalendar Platform</title>
   <script src="https://cdn.tailwindcss.com"></script>
-        <script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
@@ -22,1804 +25,755 @@
       }
     }
   </script>
-
-  <style>
-    :root {
-      --nc-page-bg: #f8fafc;
-      --nc-page-bg-alt: #ffffff;
-      --nc-surface: #ffffff;
-      --nc-surface-2: #f1f5f9;
-      --nc-surface-3: #e2e8f0;
-      --nc-surface-4: #cbd5e1;
-      --nc-text: #0f172a;
-      --nc-text-strong: #020617;
-      --nc-text-muted: #64748b;
-      --nc-text-soft: #94a3b8;
-      --nc-border: #e2e8f0;
-      --nc-border-strong: #cbd5e1;
-      --nc-accent: #2563eb;
-      --nc-accent-hover: #3b82f6;
-      --nc-accent-soft: rgba(37, 99, 235, 0.12);
-      --nc-backdrop: rgba(15, 23, 42, 0.45);
-      --nc-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
-      --nc-shadow-strong: 0 24px 70px rgba(15, 23, 42, 0.14);
-    }
-
-    html.dark {
-      --nc-page-bg: #090d16;
-      --nc-page-bg-alt: #0f172a;
-      --nc-surface: #0f172a;
-      --nc-surface-2: #111827;
-      --nc-surface-3: #1e293b;
-      --nc-surface-4: #334155;
-      --nc-text: #e2e8f0;
-      --nc-text-strong: #ffffff;
-      --nc-text-muted: #94a3b8;
-      --nc-text-soft: #64748b;
-      --nc-border: #1e293b;
-      --nc-border-strong: #334155;
-      --nc-accent: #3b82f6;
-      --nc-accent-hover: #60a5fa;
-      --nc-accent-soft: rgba(59, 130, 246, 0.16);
-      --nc-backdrop: rgba(2, 6, 23, 0.62);
-      --nc-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-      --nc-shadow-strong: 0 24px 70px rgba(0, 0, 0, 0.5);
-    }
-
-    html, body {
-      background: var(--nc-page-bg);
-      color: var(--nc-text);
-      min-height: 100%;
-      transition: background-color 220ms ease, color 220ms ease;
-    }
-
-    body {
-      color-scheme: light dark;
-    }
-
-    #root {
-      min-height: 100vh;
-      background: var(--nc-page-bg);
-      color: var(--nc-text);
-    }
-
-    #nextcalendar-shell {
-      background: var(--nc-page-bg);
-      color: var(--nc-text);
-      min-height: 100vh;
-      isolation: isolate;
-    }
-
-    #nextcalendar-shell, #nextcalendar-shell * {
-      box-sizing: border-box;
-    }
-
-    #nextcalendar-shell .text-slate-900,
-    #nextcalendar-shell .text-slate-800,
-    #nextcalendar-shell .text-slate-700,
-    #nextcalendar-shell .text-slate-600,
-    #nextcalendar-shell .text-slate-500,
-    #nextcalendar-shell .text-slate-400,
-    #nextcalendar-shell .text-slate-300,
-    #nextcalendar-shell .text-slate-200,
-    #nextcalendar-shell .text-slate-100,
-    #nextcalendar-shell .text-white,
-    #nextcalendar-shell [class*="text-slate-"] {
-      transition: color 220ms ease, border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
-    }
-
-    #nextcalendar-shell .text-slate-900 { color: var(--nc-text-strong) !important; }
-    #nextcalendar-shell .text-slate-800,
-    #nextcalendar-shell .text-slate-700 { color: var(--nc-text) !important; }
-    #nextcalendar-shell .text-slate-600,
-    #nextcalendar-shell .text-slate-500,
-    #nextcalendar-shell .text-slate-400 { color: var(--nc-text-muted) !important; }
-    #nextcalendar-shell .text-slate-300,
-    #nextcalendar-shell .text-slate-200,
-    #nextcalendar-shell .text-slate-100,
-    #nextcalendar-shell .text-white { color: var(--nc-text-strong) !important; }
-
-    #nextcalendar-shell .bg-white,
-    #nextcalendar-shell .bg-slate-50,
-    #nextcalendar-shell .bg-slate-100,
-    #nextcalendar-shell .bg-slate-900,
-    #nextcalendar-shell .bg-slate-950 { background-color: var(--nc-surface) !important; }
-
-    #nextcalendar-shell .bg-slate-50 { background-color: var(--nc-surface-2) !important; }
-    #nextcalendar-shell .bg-slate-100 { background-color: var(--nc-surface-2) !important; }
-    #nextcalendar-shell .bg-slate-900 { background-color: var(--nc-surface) !important; }
-    #nextcalendar-shell .bg-slate-950 { background-color: var(--nc-page-bg-alt) !important; }
-
-    #nextcalendar-shell .border,
-    #nextcalendar-shell .border-r,
-    #nextcalendar-shell .border-l,
-    #nextcalendar-shell .border-t,
-    #nextcalendar-shell .border-b,
-    #nextcalendar-shell .border-x,
-    #nextcalendar-shell .border-y {
-      border-color: var(--nc-border) !important;
-    }
-
-    #nextcalendar-shell .border-slate-200,
-    #nextcalendar-shell .border-slate-300,
-    #nextcalendar-shell .border-slate-800,
-    #nextcalendar-shell .border-slate-850,
-    #nextcalendar-shell .border-slate-950 {
-      border-color: var(--nc-border) !important;
-    }
-
-    #nextcalendar-shell header,
-    #nextcalendar-shell aside,
-    #nextcalendar-shell section,
-    #nextcalendar-shell .panel,
-    #nextcalendar-shell .card {
-      color: var(--nc-text);
-    }
-
-    #nextcalendar-shell aside,
-    #app-header,
-    #calendar-month-view,
-    #calendar-day-view,
-    #calendar-week-view,
-    #calendar-year-view,
-    #feedback-inner,
-    #org-directory-panel,
-    #org-parental-panel,
-    #labels-modal-card,
-    #settings-modal-card,
-    #event-panel-card,
-    #troubleshoot-section > div,
-    #calendar-section > div,
-    #feedback-section > div {
-      background: var(--nc-surface);
-      border-color: var(--nc-border);
-      color: var(--nc-text);
-      box-shadow: var(--nc-shadow);
-    }
-
-    #sidebar,
-    #main-content,
-    #calendar-section,
-    #troubleshoot-section,
-    #org-section,
-    #feedback-section {
-      background: transparent;
-      color: inherit;
-    }
-
-    #app-header {
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: color-mix(in srgb, var(--nc-surface) 82%, transparent) !important;
-      box-shadow: inset 0 -1px 0 var(--nc-border);
-    }
-
-    #calendar-view-toggle,
-    #clock-setting-buttons,
-    #labels-modal-card,
-    #settings-modal-card,
-    #event-panel-card {
-      background: var(--nc-surface);
-    }
-
-    #calendar-view-toggle button,
-    #clock-setting-buttons button,
-    #header-actions button,
-    #sidebar button,
-    #event-panel button,
-    #settings-modal button,
-    #labels-modal button,
-    #feedback-submit-button,
-    #org-parental-button,
-    #event-analyze-button,
-    #create-event-button {
-      border-color: var(--nc-border);
-      color: var(--nc-text);
-    }
-
-    #create-event-button,
-    #event-analyze-button,
-    #event-save-button,
-    #feedback-submit-button,
-    #labels-add-button,
-    #org-parental-button {
-      background: var(--nc-accent);
-      color: #ffffff;
-      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
-    }
-
-    #create-event-button:hover,
-    #event-analyze-button:hover,
-    #event-save-button:hover,
-    #feedback-submit-button:hover,
-    #labels-add-button:hover,
-    #org-parental-button:hover {
-      background: var(--nc-accent-hover);
-    }
-
-    #compact-view-button,
-    #nav-calendar,
-    #nav-troubleshoot,
-    #nav-labels,
-    #nav-settings,
-    #view-day,
-    #view-week,
-    #view-month,
-    #view-year {
-      background: transparent;
-      color: var(--nc-text-muted);
-    }
-
-    #nav-calendar:hover,
-    #nav-troubleshoot:hover,
-    #nav-labels:hover,
-    #nav-settings:hover,
-    #view-day:hover,
-    #view-week:hover,
-    #view-month:hover,
-    #view-year:hover,
-    #compact-view-button:hover {
-      background: var(--nc-accent-soft);
-      color: var(--nc-text-strong);
-    }
-
-    #calendar-view-toggle button.bg-blue-600,
-    #clock-setting-buttons button.bg-blue-600,
-    #view-day.bg-blue-600,
-    #view-week.bg-blue-600,
-    #view-month.bg-blue-600,
-    #view-year.bg-blue-600 {
-      background: var(--nc-accent) !important;
-      color: #fff !important;
-    }
-
-    #calendar-month-view > div:first-child,
-    #calendar-month-view > div:nth-child(-n+7),
-    #week-header,
-    #day-hours-column > div,
-    #week-hours-column > div {
-      background: var(--nc-surface-2);
-      color: var(--nc-text-muted);
-    }
-
-    #calendar-month-view > div,
-    #calendar-day-view,
-    #calendar-week-view,
-    #calendar-year-view {
-      box-shadow: var(--nc-shadow);
-    }
-
-    #troubleshoot-empty-state {
-      background: var(--nc-accent-soft);
-      border-color: color-mix(in srgb, var(--nc-accent) 25%, transparent) !important;
-    }
-
-    #event-panel,
-    #settings-modal,
-    #labels-modal {
-      background: var(--nc-backdrop);
-    }
-
-    #event-panel-card,
-    #settings-modal-card,
-    #labels-modal-card {
-      border: 1px solid var(--nc-border);
-      box-shadow: var(--nc-shadow-strong);
-    }
-
-    #event-panel input,
-    #event-panel textarea,
-    #event-panel select,
-    #settings-modal select,
-    #labels-input,
-    #feedback-textarea,
-    #feedback-category-select {
-      background: var(--nc-surface-2);
-      color: var(--nc-text);
-      border-color: var(--nc-border);
-    }
-
-    #event-panel input::placeholder,
-    #event-panel textarea::placeholder,
-    #labels-input::placeholder,
-    #feedback-textarea::placeholder {
-      color: var(--nc-text-soft);
-    }
-
-    #event-troubleshoot-box,
-    #feedback-history > div,
-    #troubleshoot-list > div,
-    #org-users-list > div,
-    #labels-list > div,
-    #calendar-month-view .group > div,
-    #calendar-day-view [data-event-id],
-    #calendar-week-view [data-event-id],
-    #year-mini-months > div {
-      background: color-mix(in srgb, var(--nc-surface) 88%, var(--nc-surface-2));
-      border-color: var(--nc-border);
-      color: var(--nc-text);
-    }
-
-    #feedback-history > div,
-    #labels-list > div,
-    #event-troubleshoot-box {
-      box-shadow: var(--nc-shadow);
-    }
-
-    #calendar-month-view,
-    #calendar-day-view,
-    #calendar-week-view,
-    #calendar-year-view,
-    #feedback-inner,
-    #org-directory-panel,
-    #org-parental-panel,
-    #troubleshoot-list > div,
-    #labels-modal-card,
-    #settings-modal-card,
-    #event-panel-card {
-      overflow: hidden;
-    }
-
-    ::selection {
-      background: rgba(59, 130, 246, 0.28);
-      color: #fff;
-    }
-
-    ::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: color-mix(in srgb, var(--nc-border-strong) 70%, transparent);
-      border: 3px solid transparent;
-      background-clip: padding-box;
-      border-radius: 999px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: color-mix(in srgb, var(--nc-accent) 55%, transparent);
-      border: 3px solid transparent;
-      background-clip: padding-box;
-    }
-  </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
-
-  <template id="nextcalendar-static-layout">
-    <div id="nextcalendar-shell" class="min-h-screen h-screen flex font-sans select-none overflow-hidden relative">
-      <aside id="sidebar" class="group w-16 hover:w-60 transition-all duration-300 border-r flex flex-col justify-between p-2 shrink-0 z-40 h-screen fixed md:sticky top-0 left-0">
-        <div id="sidebar-main" class="flex flex-col gap-6 overflow-y-auto no-scrollbar">
-          <div id="sidebar-brand" class="flex items-center gap-3 px-2 py-2 w-full justify-start h-12">
-            <div id="sidebar-brand-icon" class="w-12 h-12 flex items-center justify-center shrink-0"></div>
-            <span id="sidebar-brand-text" class="font-black text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap overflow-hidden">NEXTCALENDAR</span>
-          </div>
-
-          <nav id="sidebar-nav" class="flex flex-col gap-2">
-            <button id="nav-calendar" class="w-full h-12 flex items-center justify-start rounded-xl transition-all overflow-hidden">
-              <div id="nav-calendar-icon" class="w-12 h-12 flex items-center justify-center shrink-0"></div>
-              <span id="nav-calendar-text" class="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Grid</span>
-            </button>
-            <button id="nav-troubleshoot" class="w-full h-12 flex items-center justify-start rounded-xl transition-all overflow-hidden">
-              <div id="nav-troubleshoot-icon" class="w-12 h-12 flex items-center justify-center shrink-0"></div>
-              <span id="nav-troubleshoot-text" class="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Alerts</span>
-            </button>
-            <button id="nav-labels" class="w-full h-12 flex items-center justify-start rounded-xl transition-all overflow-hidden">
-              <div id="nav-labels-icon" class="w-12 h-12 flex items-center justify-center shrink-0"></div>
-              <span id="nav-labels-text" class="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Labels</span>
-            </button>
-          </nav>
-        </div>
-
-        <div id="sidebar-footer" class="pt-2 border-t">
-          <button id="nav-settings" class="w-full h-12 flex items-center justify-start rounded-xl transition-all overflow-hidden">
-            <div id="nav-settings-icon" class="w-12 h-12 flex items-center justify-center shrink-0"></div>
-            <span id="nav-settings-text" class="text-xs tracking-wider opacity-0 group-hover:opacity-100 ml-1">Settings</span>
-          </button>
-        </div>
-      </aside>
-
-      <main id="main-content" class="flex-1 flex flex-col overflow-hidden h-full ml-16 md:ml-0">
-        <header id="app-header" class="border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0">
-          <div id="header-brand">
-            <h1 id="header-title" class="text-2xl font-black tracking-tight">NEXTCalendar</h1>
-            <p id="header-subtitle" class="text-xs font-semibold uppercase tracking-wider">Minimalist AI Scheduler</p>
-          </div>
-          <div id="header-actions" class="flex items-center gap-2 shrink-0">
-            <button id="create-event-button" class="text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5">Create Event</button>
-            <button id="compact-view-button" class="border text-xs px-3 py-2.5 rounded-xl transition">Compact view</button>
-          </div>
-        </header>
-
-        <div id="toast-host"></div>
-
-        <section id="calendar-section" class="flex-1 p-4 md:p-6 flex flex-col gap-4 overflow-hidden h-full">
-          <div id="calendar-topbar" class="flex justify-between items-center flex-wrap gap-4 shrink-0">
-            <h2 id="calendar-heading" class="text-xl font-bold tracking-tight">Month / Day / Week / Year</h2>
-            <div id="calendar-view-toggle" class="p-1 border rounded-xl shadow-sm flex gap-1 items-center">
-              <button id="view-day" class="text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize">day</button>
-              <button id="view-week" class="text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize">week</button>
-              <button id="view-month" class="text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize">month</button>
-              <button id="view-year" class="text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize">year</button>
-            </div>
-          </div>
-
-          <div id="calendar-month-view" class="grid grid-cols-7 gap-1.5 border rounded-2xl overflow-hidden shadow-sm flex-1">
-            <div id="month-weekday-sun" class="p-3 text-center text-xs font-bold border-r border-b">Sun</div>
-            <div id="month-weekday-mon" class="p-3 text-center text-xs font-bold border-r border-b">Mon</div>
-            <div id="month-weekday-tue" class="p-3 text-center text-xs font-bold border-r border-b">Tue</div>
-            <div id="month-weekday-wed" class="p-3 text-center text-xs font-bold border-r border-b">Wed</div>
-            <div id="month-weekday-thu" class="p-3 text-center text-xs font-bold border-r border-b">Thu</div>
-            <div id="month-weekday-fri" class="p-3 text-center text-xs font-bold border-r border-b">Fri</div>
-            <div id="month-weekday-sat" class="p-3 text-center text-xs font-bold border-r border-b">Sat</div>
-            <div id="month-days-grid" class="contents"></div>
-          </div>
-
-          <div id="calendar-day-view" class="flex-1 flex flex-col border rounded-3xl p-0.5 shadow-sm overflow-hidden h-full">
-            <div id="day-timeline-scroll" class="flex-1 overflow-y-auto pr-2 scroll-smooth rounded-2xl relative">
-              <div id="day-timeline-layout" class="flex relative w-full h-[1440px]">
-                <div id="day-hours-column" class="w-16 flex flex-col select-none border-r">
-                  <div id="day-hour-00" class="h-[60px] text-[10px] font-black pr-2 pt-1.5 text-right border-b">12:00 AM</div>
-                </div>
-                <div id="day-timeline-grid" class="flex-1 h-[1440px] relative cursor-pointer"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="calendar-week-view" class="flex-1 flex flex-col border rounded-3xl p-0.5 shadow-sm overflow-hidden h-full">
-            <div id="week-header" class="flex shrink-0 border-b">
-              <div id="week-header-hours-spacer" class="w-16 shrink-0 border-r"></div>
-              <div id="week-header-days" class="flex-1 grid grid-cols-7 text-center py-2"></div>
-            </div>
-            <div id="week-timeline-scroll" class="flex-1 overflow-y-auto pr-2 scroll-smooth rounded-b-2xl relative">
-              <div id="week-timeline-layout" class="flex relative w-full h-[1440px]">
-                <div id="week-hours-column" class="w-16 flex flex-col select-none border-r">
-                  <div id="week-hour-00" class="h-[60px] text-[10px] font-black pr-2 pt-1.5 text-right border-b">12:00 AM</div>
-                </div>
-                <div id="week-columns" class="flex-1 h-[1440px] grid grid-cols-7 relative"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="calendar-year-view" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-1 overflow-y-auto pr-1">
-            <div id="year-mini-months" class="contents"></div>
-          </div>
-        </section>
-
-        <section id="troubleshoot-section" class="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
-          <div id="troubleshoot-inner" class="max-w-4xl mx-auto w-full">
-            <h2 id="troubleshoot-title" class="text-2xl font-bold mb-1">NEXTCalendar Agent Resolution Hub</h2>
-            <p id="troubleshoot-subtitle" class="text-xs mb-6">Clarify raw synthesized text snippets which did not meet parsing thresholds.</p>
-            <div id="troubleshoot-empty-state" class="bg-blue-600/10 border border-blue-500/20 p-8 rounded-2xl text-center" style="display:none">
-              <span id="troubleshoot-empty-icon" class="text-3xl">✨</span>
-              <h3 id="troubleshoot-empty-heading" class="text-sm font-bold mt-2">All Confusions Resolved</h3>
-              <p id="troubleshoot-empty-copy" class="text-xs mt-1">Excellent! Your input calendar schedules are perfectly structured.</p>
-            </div>
-            <div id="troubleshoot-list" class="grid gap-4"></div>
-          </div>
-        </section>
-
-        <section id="org-section" class="flex-1 p-6 overflow-y-auto">
-          <div id="org-inner" class="max-w-4xl mx-auto">
-            <h2 id="org-title" class="text-2xl font-bold mb-1">Interorganizational Communication</h2>
-            <p id="org-subtitle" class="text-xs mb-6">Coordinate schedule availability securely with workspace directories and parental safeguards.</p>
-            <div id="org-grid" class="grid md:grid-cols-3 gap-6">
-              <div id="org-directory-panel" class="md:col-span-2 border p-5 rounded-2xl flex flex-col gap-4 shadow-sm">
-                <h3 id="org-directory-title" class="text-sm font-bold">Shared Directory Spot Locator</h3>
-                <div id="org-users-list" class="space-y-3"></div>
-              </div>
-
-              <div id="org-parental-panel" class="border p-5 rounded-2xl flex flex-col justify-between shadow-sm">
-                <div id="org-parental-copy">
-                  <h3 id="org-parental-title" class="text-sm font-bold mb-2">Parental Controls Dashboard</h3>
-                  <p id="org-parental-subtitle" class="text-xs mb-4">Protect child agendas, restrict external workspace discoverability, and audit auto-created tasks.</p>
-                  <div id="org-parental-toggles" class="space-y-3">
-                    <div id="org-toggle-visibility" class="flex justify-between items-center p-2.5 rounded-xl border">
-                      <span id="org-toggle-visibility-label" class="text-xs">Limit calendar visibility</span>
-                      <input id="org-toggle-visibility-input" type="checkbox" />
-                    </div>
-                    <div id="org-toggle-invites" class="flex justify-between items-center p-2.5 rounded-xl border">
-                      <span id="org-toggle-invites-label" class="text-xs">Verify external invites</span>
-                      <input id="org-toggle-invites-input" type="checkbox" />
-                    </div>
-                  </div>
-                </div>
-                <button id="org-parental-button" class="text-xs font-bold py-2.5 rounded-xl mt-4 transition">Enable Safeguards</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="feedback-section" class="flex-1 p-6 overflow-y-auto">
-          <div id="feedback-inner" class="max-w-xl mx-auto border p-6 rounded-2xl shadow-xl">
-            <h2 id="feedback-title" class="text-xl font-bold mb-1">Recommendations & Feedback</h2>
-            <p id="feedback-subtitle" class="text-xs mb-6">Submit feature suggestions or report issues directly into our product workspace.</p>
-            <div id="feedback-form" class="flex flex-col gap-4">
-              <div id="feedback-category-group">
-                <label id="feedback-category-label" class="text-xs block mb-1">Feedback Category:</label>
-                <select id="feedback-category-select" class="w-full border rounded-xl p-2.5 text-xs"></select>
-              </div>
-              <div id="feedback-text-group">
-                <label id="feedback-text-label" class="text-xs block mb-1">Description:</label>
-                <textarea id="feedback-textarea" rows="4" class="w-full border rounded-xl p-3 text-xs" placeholder="Describe your suggestion or layout issue..."></textarea>
-              </div>
-              <button id="feedback-submit-button" class="text-xs font-bold py-2.5 rounded-xl transition shadow-md">Submit Form</button>
-            </div>
-            <div id="feedback-history" class="mt-6"></div>
-          </div>
-        </section>
-      </main>
-
-      <div id="labels-modal" class="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4" style="display:none">
-        <div id="labels-modal-card" class="border rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col justify-between max-h-[90vh] overflow-y-auto">
-          <div id="labels-modal-header" class="flex justify-between items-center mb-5">
-            <h3 id="labels-modal-title" class="text-sm font-bold uppercase tracking-wider select-none">Customize Preset Labels</h3>
-            <button id="labels-modal-close" class="p-1.5 rounded-lg">×</button>
-          </div>
-          <div id="labels-list" class="flex flex-wrap gap-2 mb-6"></div>
-          <div id="labels-add-row" class="flex gap-2">
-            <input id="labels-input" type="text" placeholder="Create custom label preset..." class="flex-1 border text-xs px-3 py-2 rounded-xl outline-none" />
-            <button id="labels-add-button" class="text-xs px-4 rounded-xl font-bold transition">Add</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="settings-modal" class="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4" style="display:none">
-        <div id="settings-modal-card" class="border rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col justify-between max-h-[92vh] overflow-y-auto">
-          <div id="settings-modal-header" class="flex justify-between items-center mb-6">
-            <h3 id="settings-modal-title" class="text-sm font-bold uppercase tracking-wider select-none">Configurations</h3>
-            <button id="settings-modal-close" class="p-1.5 rounded-lg">×</button>
-          </div>
-          <div id="settings-modal-body" class="flex flex-col gap-5">
-            <div id="theme-setting" class="flex flex-col gap-1.5">
-              <label id="theme-setting-label" class="text-xs uppercase font-bold tracking-widest">Interface Theme</label>
-              <select id="theme-setting-select" class="w-full border rounded-xl p-2.5 text-xs"></select>
-            </div>
-            <div id="clock-setting" class="flex flex-col gap-1.5 pt-2 border-t">
-              <label id="clock-setting-label" class="text-xs uppercase font-bold tracking-widest">Time Format</label>
-              <div id="clock-setting-buttons" class="flex gap-2">
-                <button id="clock-12h-button" class="flex-1 py-2 rounded-xl text-xs font-bold transition border">12-Hour Clock</button>
-                <button id="clock-24h-button" class="flex-1 py-2 rounded-xl text-xs font-bold transition border">24-Hour Clock</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="event-panel" class="fixed inset-0 backdrop-blur-md z-50 flex items-center justify-center p-4" style="display:none">
-        <div id="event-panel-card" class="flex flex-col justify-between max-h-[92vh] border shadow-2xl overflow-y-auto w-full max-w-4xl p-6 rounded-3xl">
-          <div id="event-panel-header" class="flex justify-between items-center mb-6">
-            <h3 id="event-panel-title" class="text-xs font-bold uppercase tracking-wider select-none">Create Event with AI Notecard</h3>
-            <button id="event-panel-close" class="p-1.5 rounded-lg">×</button>
-          </div>
-
-          <div id="event-panel-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start flex-1 overflow-y-auto pb-4">
-            <div id="event-panel-left" class="flex flex-col gap-4">
-              <div id="event-title-group">
-                <label id="event-title-label" class="text-[10px] uppercase font-bold tracking-widest block mb-1">Headline Title (Optional)</label>
-                <input id="event-title-input" type="text" placeholder="Auto-generated if empty..." class="w-full border rounded-xl p-3 text-xs outline-none" />
-              </div>
-              <div id="event-description-group">
-                <label id="event-description-label" class="text-[10px] uppercase font-bold tracking-widest block mb-1">Big Notecard notes (AI Parser Context)</label>
-                <textarea id="event-description-input" rows="8" placeholder="Write detailed event notes here..." class="w-full border rounded-xl p-3 text-xs outline-none resize-none"></textarea>
-              </div>
-              <div id="event-analyze-row" class="pt-2">
-                <button id="event-analyze-button" class="w-full text-white text-xs font-bold py-3.5 rounded-xl transition shadow-lg">Analyze</button>
-              </div>
-            </div>
-
-            <div id="event-panel-right" class="border p-5 rounded-2xl flex flex-col gap-4 h-full">
-              <div id="event-interpretation-block">
-                <span id="event-interpretation-title" class="text-[10px] uppercase font-bold tracking-widest block mb-1">NEXTCalendar Agent interpretation</span>
-                <div id="event-interpretation-copy" class="space-y-1">
-                  <p id="event-interpretation-copy-label" class="text-[11px] font-bold">Interpreted Title:</p>
-                  <h4 id="event-interpretation-heading" class="text-sm font-black leading-tight">Awaiting Analysis...</h4>
-                </div>
-              </div>
-
-              <div id="event-metadata" class="grid grid-cols-2 gap-3 text-xs border-t pt-3">
-                <div id="event-time-field"><span id="event-time-label" class="text-[10px] uppercase font-bold tracking-widest block mb-0.5">Time</span><p id="event-time-value" class="font-bold">12:00 PM</p></div>
-                <div id="event-duration-field"><span id="event-duration-label" class="text-[10px] uppercase font-bold tracking-widest block mb-0.5">Duration</span><p id="event-duration-value" class="font-bold">60 Mins</p></div>
-              </div>
-
-              <div id="event-troubleshoot-box" class="border p-4 rounded-xl flex flex-col gap-2.5" style="display:none">
-                <div id="event-troubleshoot-header" class="flex items-center gap-1.5">
-                  <span id="event-troubleshoot-icon">!</span>
-                  <span id="event-troubleshoot-title" class="text-xs font-black uppercase tracking-wider">Quick question</span>
-                </div>
-                <p id="event-troubleshoot-question" class="text-[11px]"></p>
-                <div id="event-troubleshoot-options" class="flex flex-col gap-1.5 mt-1"></div>
-              </div>
-            </div>
-          </div>
-
-          <div id="event-panel-footer" class="border-t pt-4 flex gap-2 justify-between mt-6">
-            <button id="event-delete-button" class="text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5" style="display:none">Delete Event</button>
-            <div id="event-panel-footer-actions" class="flex gap-2 ml-auto">
-              <button id="event-cancel-button" class="text-xs font-bold px-4 py-2.5 rounded-xl transition border">Cancel</button>
-              <button id="event-save-button" class="text-xs font-bold px-5 py-2.5 rounded-xl transition shadow-md">Create Event</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-
   <div id="root"></div>
 
-
-  
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const template = document.getElementById('nextcalendar-static-layout');
-    const root = document.getElementById('root');
-
-    if (!template || !root) return;
-    root.appendChild(template.content.cloneNode(true));
-
-    document.documentElement.classList.add('dark');
-
-    const $ = (id) => document.getElementById(id);
-    const safeDateString = (d) => {
-      const date = new Date(d);
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${y}-${m}-${day}`;
-    };
-
-    const parseTimeToMinutes = (time) => {
-      if (!time) return 0;
-      const t = time.trim().toUpperCase();
-      const match12 = t.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
-      if (match12) {
-        let h = parseInt(match12[1], 10);
-        const m = parseInt(match12[2], 10);
-        const ap = match12[3];
-        if (ap === 'PM' && h !== 12) h += 12;
-        if (ap === 'AM' && h === 12) h = 0;
-        return h * 60 + m;
-      }
-      const match24 = t.match(/^(\d{1,2}):(\d{2})$/);
-      if (match24) return parseInt(match24[1], 10) * 60 + parseInt(match24[2], 10);
-      return 0;
-    };
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
     const FEATHERLESS_API_URL = "https://api.featherless.run/v1/chat/completions";
     const FEATHERLESS_API_KEY = "rc_8931c724abf2632626dea5b3b612ee5a836dc92b22a5e54a315281ce694885af";
     const FEATHERLESS_MODEL = "meta-llama/llama-3-8b-instruct";
 
-    const state = {
-      themeMode: 'dark',
-      isCompact: false,
-      currentDate: new Date(),
-      activeTab: 'calendar',
-      currentView: 'month',
-      events: [
-        {
-          id: 'demo-prefill-joe',
-          title: 'Lunch',
-          description: 'eat lunch at the cafe with joe mama at tgi firdays',
-          date: safeDateString(new Date()),
-          time: '12:00 PM',
-          duration: 60,
-          label: 'event',
-          importance: 'high',
-          details: 'Troubleshoot Demo Event',
-          syncPlatform: 'None',
-          needsTroubleshoot: true,
-          troubleshootQuestion: "Did you mean at the Cafe or at TGI Fridays?",
-          troubleshootOptions: ["Cafe", "TGI Fridays"],
-          resolvedOption: null
-        }
-      ],
-      toastMessage: null,
-      is24HourClock: false,
-      labelsList: [
+    const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    const getFirstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    const parseTimeToMinutes = (timeStr) => {
+      if (!timeStr) return 0;
+      const m = String(timeStr).match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if (!m) return 0;
+      let h = parseInt(m[1], 10);
+      const min = parseInt(m[2], 10);
+      const ampm = m[3].toUpperCase();
+      if (ampm === 'PM' && h !== 12) h += 12;
+      if (ampm === 'AM' && h === 12) h = 0;
+      return h * 60 + min;
+    };
+
+    const Icons = {
+      Calendar: () => (<svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>),
+      Troubleshoot: () => (<svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>),
+      Tag: () => (<svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M6 20l6.5-6.5A2.5 2.5 0 0012 10a2.5 2.5 0 00-3.5 0L2 16.5V20h4z" /></svg>),
+      Dots: () => (<svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01" /></svg>),
+      Plus: () => (<svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>),
+      Close: () => (<svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>),
+      Warning: () => (<svg className="w-5 h-5 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>)
+    };
+
+    function App() {
+      const [themeMode, setThemeMode] = useState('dark');
+      const [isCompact, setIsCompact] = useState(false);
+      const [currentDate, setCurrentDate] = useState(new Date());
+      const [activeTab, setActiveTab] = useState('calendar');
+      const [savedBackgrounds, setSavedBackgrounds] = useState([]);
+      const [activeBackgroundIndex, setActiveBackgroundIndex] = useState(null);
+      const [isCustomizingBg, setIsCustomizingBg] = useState(false);
+      const [brushColor, setBrushColor] = useState('#3b82f6');
+      const [brushSize, setBrushSize] = useState(6);
+      const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+      const [isLabelsModalOpen, setIsLabelsModalOpen] = useState(false);
+      const [events, setEvents] = useState([{
+        id: 'demo-prefill-joe',
+        title: 'Lunch',
+        description: 'eat lunch at the cafe with joe mama at tgi firdays',
+        date: new Date().toISOString().split('T')[0],
+        time: '12:00 PM',
+        duration: 60,
+        label: 'event',
+        importance: 'high',
+        details: 'Troubleshoot Demo Event',
+        syncPlatform: 'None',
+        needsTroubleshoot: true,
+        troubleshootQuestion: "Did you mean at the Cafe or at TGI Fridays?",
+        troubleshootOptions: ["Cafe", "TGI Fridays"],
+        resolvedOption: null
+      }]);
+      const [toastMessage, setToastMessage] = useState(null);
+      const [is24HourClock, setIs24HourClock] = useState(false);
+      const [labelsList, setLabelsList] = useState([
         { name: 'event', color: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20' },
         { name: 'due date', color: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20' },
         { name: 'recurring event', color: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20' },
         { name: 'custom task', color: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/20' }
-      ],
-      troubleQueue: [
-        { id: 't1', rawText: 'lunch with dev group maybe around 1 or 2 next monday', suspectedType: 'event', possibleDates: ['Next Monday'], details: 'Ambiguity: "around 1 or 2" is multiple hours. "next monday" is unspecified date.' },
-        { id: 't2', rawText: 'finish fixing the bug before midnight tomorrow', suspectedType: 'due date', possibleDates: ['Tomorrow Midnight'], details: 'Ambiguity: Needs specific project assignment or label confirmation.' }
-      ],
-      selectedDayString: safeDateString(new Date()),
-      selectedEventId: null,
-      isSettingsModalOpen: false,
-      isLabelsModalOpen: false,
-      isEventPanelOpen: false,
-      edit: {
-        title: '',
-        description: '',
-        date: safeDateString(new Date()),
-        time: '12:00 PM',
-        duration: 60,
-        label: 'event',
-        sync: 'None',
-        importance: 'medium',
-        details: '',
-        needsTroubleshoot: false,
-        troubleshootQuestion: '',
-        troubleshootOptions: [],
-        resolvedOption: null
-      },
-      feedbackCategory: 'Recommendation',
-      feedbackText: '',
-      feedbacks: [],
-      newLabelName: '',
-      parentalControlsEnabled: true
-    };
+      ]);
+      const [newLabelName, setNewLabelName] = useState('');
+      const [troubleQueue, setTroubleQueue] = useState([]);
+      const [calendarView, setCalendarView] = useState('month');
+      const [selectedDayString, setSelectedDayString] = useState(new Date().toISOString().split('T')[0]);
+      const [isTodoMode, setIsTodoMode] = useState(false);
+      const [todoSortMode, setTodoSortMode] = useState('time');
+      const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
+      const [rightPanelMode, setRightPanelMode] = useState('view');
+      const [selectedEvent, setSelectedEvent] = useState(null);
+      const [editTitle, setEditTitle] = useState('');
+      const [editDescription, setEditDescription] = useState('');
+      const [editDate, setEditDate] = useState('');
+      const [editTime, setEditTime] = useState('12:00 PM');
+      const [editDuration, setEditDuration] = useState(60);
+      const [editLabel, setEditLabel] = useState('event');
+      const [editSync, setEditSync] = useState('None');
+      const [editImportance, setEditImportance] = useState('medium');
+      const [editDetails, setEditDetails] = useState('');
+      const [editNeedsTroubleshoot, setEditNeedsTroubleshoot] = useState(false);
+      const [editTroubleshootQuestion, setEditTroubleshootQuestion] = useState("");
+      const [editTroubleshootOptions, setEditTroubleshootOptions] = useState([]);
+      const [editResolvedOption, setEditResolvedOption] = useState(null);
+      const [customOverrideText, setCustomOverrideText] = useState("");
+      const [liveMinutes, setLiveMinutes] = useState(0);
+      const [parentalControlsEnabled, setParentalControlsEnabled] = useState(false);
+      const [feedbackCategory, setFeedbackCategory] = useState('Recommendation');
+      const [feedbackText, setFeedbackText] = useState('');
+      const [feedbacks, setFeedbacks] = useState([]);
+      const dayTimelineScrollRef = useRef(null);
+      const lastKeyRef = useRef(null);
+      const isDark = themeMode === 'dark';
 
-    const shell = $('nextcalendar-shell');
-    const createEventButton = $('create-event-button');
-    const compactViewButton = $('compact-view-button');
-    const toastHost = $('toast-host');
-    const calendarSection = $('calendar-section');
-    const troubleshootSection = $('troubleshoot-section');
-    const orgSection = $('org-section');
-    const feedbackSection = $('feedback-section');
-    const calendarHeading = $('calendar-heading');
-    const monthDaysGrid = $('month-days-grid');
-    const dayHoursColumn = $('day-hours-column');
-    const dayTimelineGrid = $('day-timeline-grid');
-    const weekHeaderDays = $('week-header-days');
-    const weekColumns = $('week-columns');
-    const yearMiniMonths = $('year-mini-months');
-    const troubleshootEmptyState = $('troubleshoot-empty-state');
-    const troubleshootList = $('troubleshoot-list');
-    const orgUsersList = $('org-users-list');
-    const themeSettingSelect = $('theme-setting-select');
-    const clock12Button = $('clock-12h-button');
-    const clock24Button = $('clock-24h-button');
-    const labelsList = $('labels-list');
-    const labelsInput = $('labels-input');
-    const labelsAddButton = $('labels-add-button');
-    const settingsModal = $('settings-modal');
-    const labelsModal = $('labels-modal');
-    const eventPanel = $('event-panel');
-    const eventTitleInput = $('event-title-input');
-    const eventDescriptionInput = $('event-description-input');
-    const eventAnalyzeButton = $('event-analyze-button');
-    const eventSaveButton = $('event-save-button');
-    const eventCancelButton = $('event-cancel-button');
-    const eventDeleteButton = $('event-delete-button');
-    const eventInterpretationHeading = $('event-interpretation-heading');
-    const eventTimeValue = $('event-time-value');
-    const eventDurationValue = $('event-duration-value');
-    const eventTroubleshootBox = $('event-troubleshoot-box');
-    const eventTroubleshootQuestion = $('event-troubleshoot-question');
-    const eventTroubleshootOptions = $('event-troubleshoot-options');
-    const feedbackCategorySelect = $('feedback-category-select');
-    const feedbackTextarea = $('feedback-textarea');
-    const feedbackSubmitButton = $('feedback-submit-button');
-    const feedbackHistory = $('feedback-history');
-    const orgParentalButton = $('org-parental-button');
-    const orgToggleVisibilityInput = $('org-toggle-visibility-input');
-    const orgToggleInvitesInput = $('org-toggle-invites-input');
-    const navCalendar = $('nav-calendar');
-    const navTroubleshoot = $('nav-troubleshoot');
-    const navLabels = $('nav-labels');
-    const navSettings = $('nav-settings');
-    const viewDay = $('view-day');
-    const viewWeek = $('view-week');
-    const viewMonth = $('view-month');
-    const viewYear = $('view-year');
-    const calendarMonthView = $('calendar-month-view');
-    const calendarDayView = $('calendar-day-view');
-    const calendarWeekView = $('calendar-week-view');
-    const calendarYearView = $('calendar-year-view');
-    const settingsClose = $('settings-modal-close');
-    const labelsClose = $('labels-modal-close');
-    const eventClose = $('event-panel-close');
+      const orgUsers = [
+        { id: 1, name: 'Alex Kim', role: 'Team Lead', availableSlots: ['09:00 AM - 10:00 AM', '02:00 PM - 03:00 PM'] },
+        { id: 2, name: 'Mia Patel', role: 'Designer', availableSlots: ['11:00 AM - 12:00 PM', '04:00 PM - 05:00 PM'] }
+      ];
 
-    const CalendarIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-    </svg>`;
+      const triggerToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3000);
+      };
 
-    const TroubleshootIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-    </svg>`;
+      const simulateLocalAI = (text) => {
+        const lowercase = text.toLowerCase();
+        let label = 'event';
+        if (lowercase.includes('due') || lowercase.includes('deadline') || lowercase.includes('submit')) label = 'due date';
+        else if (lowercase.includes('every') || lowercase.includes('weekly') || lowercase.includes('recurring')) label = 'recurring event';
 
-    const OrgIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>`;
+        let time = '12:00 PM';
+        const timeMatch = text.match(/(\d+):?(\d+)?\s*(am|pm)/i);
+        if (timeMatch) time = timeMatch[0].toUpperCase();
 
-    const FeedbackIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-    </svg>`;
+        let targetDate = new Date().toISOString().split('T')[0];
+        if (lowercase.includes('tomorrow')) targetDate = new Date(Date.now() + 86400000).toISOString().split('T')[0];
 
-    const DotsIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-    </svg>`;
+        let importance = 'medium';
+        if (lowercase.includes('important') || lowercase.includes('urgent') || lowercase.includes('asap')) importance = 'high';
 
-    const PlusIcon = `
-    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-    </svg>`;
+        const isTroubleshootDemo = lowercase.includes("cafe") && lowercase.includes("mama");
+        return {
+          title: isTroubleshootDemo ? 'Lunch' : (text.split('at')[0].trim().substring(0, 40) || 'Synthesized Task'),
+          date: targetDate,
+          time,
+          duration: 60,
+          label,
+          importance,
+          needsTroubleshoot: isTroubleshootDemo,
+          troubleshootQuestion: isTroubleshootDemo ? "Did you mean at the Cafe or at TGI Fridays?" : "",
+          troubleshootOptions: isTroubleshootDemo ? ["Cafe", "TGI Fridays"] : []
+        };
+      };
 
-    const CloseIcon = `
-    <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-    </svg>`;
+      const getFriendlyDateHeader = () => {
+        if (calendarView === 'month') return `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`;
+        if (calendarView === 'day') return new Date(selectedDayString + 'T00:00:00').toDateString();
+        if (calendarView === 'week') return `Week of ${getActiveWeekDays()[0].toDateString()}`;
+        return `${currentDate.getFullYear()}`;
+      };
 
-    const WarningIcon = `
-    <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-    </svg>`;
-    $('nav-calendar-icon').innerHTML = CalendarIcon;
-    $('nav-troubleshoot-icon').innerHTML = TroubleshootIcon;
-    $('nav-labels-icon').innerHTML = OrgIcon;
-    $('nav-settings-icon').innerHTML = DotsIcon;
+      const handleCreateNewClick = () => {
+        setSelectedEvent(null);
+        setEditTitle('');
+        setEditDescription('');
+        setEditDate(selectedDayString);
+        setEditTime('12:00 PM');
+        setEditDuration(60);
+        setEditLabel('event');
+        setEditSync('None');
+        setEditImportance('medium');
+        setEditDetails('');
+        setEditNeedsTroubleshoot(false);
+        setEditTroubleshootQuestion('');
+        setEditTroubleshootOptions([]);
+        setEditResolvedOption(null);
+        setRightPanelMode('create');
+        setIsRightPanelOpen(true);
+      };
 
-    $('create-event-button').insertAdjacentHTML('afterbegin', PlusIcon);
-    $('event-panel-close').innerHTML = CloseIcon;
-    $('settings-modal-close').innerHTML = CloseIcon;
-    $('labels-modal-close').innerHTML = CloseIcon;
+      const handleDayCellClick = (dayStr) => {
+        setSelectedDayString(dayStr);
+        setCalendarView('day');
+      };
 
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
+      const handleEventClick = (e, event) => {
+        e.stopPropagation();
+        setSelectedEvent(event);
+        setEditTitle(event.title || '');
+        setEditDescription(event.description || '');
+        setEditDate(event.date || selectedDayString);
+        setEditTime(event.time || '12:00 PM');
+        setEditDuration(event.duration || 60);
+        setEditLabel(event.label || 'event');
+        setEditSync(event.syncPlatform || 'None');
+        setEditImportance(event.importance || 'medium');
+        setEditDetails(event.details || '');
+        setEditNeedsTroubleshoot(!!event.needsTroubleshoot);
+        setEditTroubleshootQuestion(event.troubleshootQuestion || '');
+        setEditTroubleshootOptions(event.troubleshootOptions || []);
+        setEditResolvedOption(event.resolvedOption || null);
+        setRightPanelMode('view');
+        setIsRightPanelOpen(true);
+      };
 
-    function triggerToast(message) {
-      state.toastMessage = message;
-      renderToast();
-      clearTimeout(triggerToast._timer);
-      triggerToast._timer = setTimeout(() => {
-        state.toastMessage = null;
-        renderToast();
-      }, 3000);
-    }
+      const resolveTrouble = (item, type, value) => {
+        setTroubleQueue(prev => prev.filter(q => q.id !== item.id));
+        setEvents(prev => [...prev, {
+          id: 'resolved_' + Date.now(),
+          title: item.suspectedType === 'event' ? 'Resolved Event' : 'Resolved Task',
+          description: item.rawText,
+          date: selectedDayString,
+          time: '12:00 PM',
+          duration: 60,
+          label: type,
+          importance: 'medium',
+          details: value || '',
+          syncPlatform: 'None',
+          needsTroubleshoot: false,
+          troubleshootQuestion: '',
+          troubleshootOptions: [],
+          resolvedOption: value || null
+        }]);
+        triggerToast('Trouble resolved.');
+      };
 
-    function setThemeMode(mode) {
-      state.themeMode = mode;
-      document.documentElement.classList.toggle('dark', mode === 'dark');
-      document.documentElement.classList.toggle('light', mode !== 'dark');
-      if (themeSettingSelect) themeSettingSelect.value = mode;
-    }
+      const addNewLabel = () => {
+        const name = newLabelName.trim();
+        if (!name || labelsList.some(l => l.name.toLowerCase() === name.toLowerCase())) return;
+        setLabelsList([...labelsList, { name, color: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/20' }]);
+        setNewLabelName('');
+      };
 
-    function getFriendlyDateHeader() {
-      if (state.currentView === 'year') return `${state.currentDate.getFullYear()}`;
-      if (state.currentView === 'month') return state.currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-      if (state.currentView === 'day') return new Date(state.selectedDayString + 'T00:00:00').toLocaleDateString('default', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-      const d = new Date(state.selectedDayString + 'T00:00:00');
-      const start = new Date(d);
-      start.setDate(d.getDate() - d.getDay());
-      const end = new Date(start);
-      end.setDate(start.getDate() + 6);
-      return `${start.toLocaleDateString('default', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-    }
+      const deleteLabel = (name) => setLabelsList(labelsList.filter(l => l.name !== name));
 
-    function getActiveWeekDays() {
-      const selected = new Date(state.selectedDayString + 'T00:00:00');
-      const sundayOffset = selected.getDate() - selected.getDay();
-      const days = [];
-      for (let i = 0; i < 7; i++) days.push(new Date(selected.getFullYear(), selected.getMonth(), sundayOffset + i));
-      return days;
-    }
+      const handleDeleteEvent = (id) => {
+        setEvents(events.filter(ev => ev.id !== id));
+        setIsRightPanelOpen(false);
+      };
 
-    function renderToast() {
-      if (!toastHost) return;
-      toastHost.innerHTML = state.toastMessage
-        ? `<div class="fixed top-4 right-4 z-[60] bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg">${escapeHtml(state.toastMessage)}</div>`
-        : '';
-    }
+      useEffect(() => {
+        const updateTime = () => setLiveMinutes(new Date().getHours() * 60 + new Date().getMinutes());
+        updateTime();
+        const interval = setInterval(updateTime, 1000);
+        return () => clearInterval(interval);
+      }, []);
 
-    function renderVisibility() {
-      if (calendarSection) calendarSection.style.display = state.activeTab === 'calendar' ? 'flex' : 'none';
-      if (troubleshootSection) troubleshootSection.style.display = state.activeTab === 'troubleshoot' ? 'flex' : 'none';
-      if (orgSection) orgSection.style.display = state.activeTab === 'org' ? 'flex' : 'none';
-      if (feedbackSection) feedbackSection.style.display = state.activeTab === 'feedback' ? 'flex' : 'none';
+      useEffect(() => {
+        if ((calendarView === 'day' || calendarView === 'week') && dayTimelineScrollRef.current) dayTimelineScrollRef.current.scrollTop = 420;
+      }, [calendarView]);
 
-      if (calendarMonthView) calendarMonthView.style.display = state.currentView === 'month' ? 'grid' : 'none';
-      if (calendarDayView) calendarDayView.style.display = state.currentView === 'day' ? 'flex' : 'none';
-      if (calendarWeekView) calendarWeekView.style.display = state.currentView === 'week' ? 'flex' : 'none';
-      if (calendarYearView) calendarYearView.style.display = state.currentView === 'year' ? 'grid' : 'none';
+      useEffect(() => {
+        const handleDevTools = (e) => {
+          if (lastKeyRef.current === '`' && e.key.toLowerCase() === 'q') {
+            if (isRightPanelOpen && (rightPanelMode === 'create' || rightPanelMode === 'edit')) {
+              setEditNeedsTroubleshoot(true);
+              setEditTroubleshootQuestion("Did you mean at Microsoft HQ or at Amazon HQ?");
+              setEditTroubleshootOptions(["Microsoft HQ", "Amazon HQ"]);
+              setEditResolvedOption(null);
+              triggerToast("Devtools: Injected mockup troubleshoot sequence!");
+            } else {
+              triggerToast("Please open the Event Creation modal first before testing questions!");
+            }
+          }
+          lastKeyRef.current = e.key;
+        };
+        window.addEventListener('keydown', handleDevTools);
+        return () => window.removeEventListener('keydown', handleDevTools);
+      }, [isRightPanelOpen, rightPanelMode]);
 
-      if (settingsModal) settingsModal.style.display = state.isSettingsModalOpen ? 'flex' : 'none';
-      if (labelsModal) labelsModal.style.display = state.isLabelsModalOpen ? 'flex' : 'none';
-      if (eventPanel) eventPanel.style.display = state.isEventPanelOpen ? 'flex' : 'none';
-      if (troubleshootEmptyState) troubleshootEmptyState.style.display = state.troubleQueue.length === 0 ? 'block' : 'none';
-    }
+      useEffect(() => {
+        const root = window.document.documentElement;
+        if (isDark) root.classList.add('dark');
+        else root.classList.remove('dark');
+      }, [isDark]);
 
-    function renderCalendarHeader() {
-      if (calendarHeading) calendarHeading.textContent = getFriendlyDateHeader();
-      if (viewDay) viewDay.className = `text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize ${state.currentView === 'day' ? 'bg-blue-600 text-white shadow-md' : ''}`;
-      if (viewWeek) viewWeek.className = `text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize ${state.currentView === 'week' ? 'bg-blue-600 text-white shadow-md' : ''}`;
-      if (viewMonth) viewMonth.className = `text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize ${state.currentView === 'month' ? 'bg-blue-600 text-white shadow-md' : ''}`;
-      if (viewYear) viewYear.className = `text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize ${state.currentView === 'year' ? 'bg-blue-600 text-white shadow-md' : ''}`;
-    }
+      const handleSaveEventAndAnalyze = async () => {
+        const textContext = editDescription.trim();
+        if (!textContext) return triggerToast("Please write details into the Notecard");
 
-    function renderMonthView() {
-      if (!monthDaysGrid) return;
-      const todayObj = new Date();
-      const daysInMonthCount = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 0).getDate();
-      const firstDayOffsetIndex = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1).getDay();
-      const daysArray = [];
-      for (let i = 0; i < firstDayOffsetIndex; i++) daysArray.push(null);
-      for (let i = 1; i <= daysInMonthCount; i++) daysArray.push(i);
+        const localParsed = simulateLocalAI(textContext);
+        try {
+          const response = await fetch(FEATHERLESS_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${FEATHERLESS_API_KEY}` },
+            body: JSON.stringify({
+              model: FEATHERLESS_MODEL,
+              messages: [
+                { role: "system", content: "Respond ONLY in JSON: {\"title\":\"string\",\"time\":\"HH:MM AM/PM\",\"duration\":60,\"label\":\"event\",\"importance\":\"medium\"}." },
+                { role: "user", content: `Analyze this note text: "${textContext}"` }
+              ]
+            })
+          });
 
-      monthDaysGrid.innerHTML = daysArray.map((day) => {
-        if (!day) return '<div></div>';
-        const formattedDayString = `${state.currentDate.getFullYear()}-${String(state.currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const isToday = day === todayObj.getDate() && state.currentDate.getMonth() === todayObj.getMonth() && state.currentDate.getFullYear() === todayObj.getFullYear();
-        const dayEvents = state.events.filter(e => e.date === formattedDayString);
-        const eventHtml = dayEvents.map(ev => {
-          const labelDetails = state.labelsList.find(l => l.name === ev.label) || { color: 'bg-blue-50/10' };
-          return `<div class="p-1 rounded border text-[9px] font-bold truncate ${labelDetails.color}" data-event-id="${ev.id}">${escapeHtml(ev.title)}</div>`;
-        }).join('');
-        return `
-          <div class="min-h-[110px] border-r border-b p-2 flex flex-col relative group cursor-pointer ${isToday ? 'ring-2 ring-blue-500' : ''}" data-day="${formattedDayString}">
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-xs font-bold px-1.5 py-0.5 rounded-lg ${isToday ? 'bg-blue-600 text-white' : ''}" data-day-open="${formattedDayString}">${day}</span>
-            </div>
-            <div class="flex-1 flex flex-col gap-1 overflow-y-auto max-h-[120px]">
-              ${eventHtml}
-            </div>
-          </div>
-        `;
-      }).join('');
+          if (!response.ok) throw new Error("API Error");
+          const data = await response.json();
+          const rawResult = data.choices?.[0]?.message?.content || '{}';
+          const jsonMatch = rawResult.includes('{') ? rawResult.substring(rawResult.indexOf('{'), rawResult.lastIndexOf('}') + 1) : '{}';
+          const parsed = JSON.parse(jsonMatch);
 
-      monthDaysGrid.querySelectorAll('[data-day]').forEach(cell => cell.addEventListener('click', () => openDay(cell.getAttribute('data-day'))));
-      monthDaysGrid.querySelectorAll('[data-day-open]').forEach(cell => cell.addEventListener('click', (e) => { e.stopPropagation(); openDay(cell.getAttribute('data-day-open')); }));
-      monthDaysGrid.querySelectorAll('[data-event-id]').forEach(el => el.addEventListener('click', (e) => { e.stopPropagation(); const ev = state.events.find(x => x.id === el.getAttribute('data-event-id')); if (ev) openEvent(ev); }));
-    }
+          setEditTitle(parsed.title || localParsed.title);
+          setEditTime(parsed.time || localParsed.time);
+          setEditDuration(parsed.duration || 60);
+          setEditLabel(parsed.label || 'event');
+          setEditImportance(parsed.importance || 'medium');
+          setEditSync('None');
+          setEditDetails("Analyzed in real-time by NEXTCalendar Llama AI.");
+          setEditNeedsTroubleshoot(false);
+          triggerToast("AI analysis complete!");
+        } catch (err) {
+          setEditTitle(localParsed.title);
+          setEditTime(localParsed.time);
+          setEditDuration(localParsed.duration);
+          setEditLabel(localParsed.label);
+          setEditImportance(localParsed.importance);
+          setEditSync('None');
+          setEditDetails("Parsed locally via fallback engine.");
+          setEditNeedsTroubleshoot(localParsed.needsTroubleshoot);
+          setEditTroubleshootQuestion(localParsed.troubleshootQuestion);
+          setEditTroubleshootOptions(localParsed.troubleshootOptions);
+          setEditResolvedOption(null);
+          triggerToast("AI offline. Processed via local parser!");
+        }
+      };
 
-    function renderDayView() {
-      if (!dayHoursColumn || !dayTimelineGrid) return;
-      const standardHours = Array.from({ length: 24 }, (_, i) => ({
-        label: state.is24HourClock ? `${String(i).padStart(2, '0')}:00` : `${String(i % 12 === 0 ? 12 : i % 12).padStart(2, '0')}:00 ${i >= 12 ? 'PM' : 'AM'}`,
-      }));
-      dayHoursColumn.innerHTML = standardHours.map(hour => `<div class="h-[60px] text-[10px] font-black text-slate-500 pr-2 pt-1.5 text-right border-b border-slate-200/50">${hour.label}</div>`).join('');
-      dayTimelineGrid.innerHTML = `
-        ${Array.from({ length: 24 }).map((_, idx) => `<div class="absolute left-0 right-0 border-b border-slate-200/50 pointer-events-none" style="top:${(idx + 1) * 60}px"></div>`).join('')}
-        ${state.events.filter(e => e.date === state.selectedDayString).map(ev => {
-          const labelDetails = state.labelsList.find(l => l.name === ev.label) || { color: 'bg-blue-50/10' };
-          const startMin = parseTimeToMinutes(ev.time);
-          const duration = ev.duration || 60;
-          return `<div data-event-id="${ev.id}" class="p-3 rounded-xl border flex flex-col justify-between overflow-hidden shadow-sm transition-transform hover:scale-[1.005] z-10 ${labelDetails.color}" style="position:absolute;top:${startMin}px;height:${duration}px;left:8px;right:8px;">
-            <div class="flex flex-col leading-tight">
-              <div class="flex justify-between items-center">
-                <span class="text-xs font-black truncate">${escapeHtml(ev.title)}</span>
-                <span class="text-[9px] font-bold shrink-0 opacity-80">${escapeHtml(ev.time)}</span>
-              </div>
-              <p class="text-[10px] truncate mt-1">${escapeHtml(ev.description || '')}</p>
-            </div>
-          </div>`;
-        }).join('')}
-      `;
-      dayTimelineGrid.querySelectorAll('[data-event-id]').forEach(el => el.addEventListener('click', (e) => { e.stopPropagation(); const ev = state.events.find(x => x.id === el.getAttribute('data-event-id')); if (ev) openEvent(ev); }));
-    }
+      const handleMonthCellBackgroundClick = (dayStr) => {
+        setSelectedDayString(dayStr);
+        setSelectedEvent(null);
+        setEditTitle('');
+        setEditDescription('');
+        setEditDate(dayStr);
+        setEditTime('12:00 PM');
+        setEditDuration(60);
+        setEditLabel('event');
+        setEditDetails('');
+        setEditSync('None');
+        setEditImportance('medium');
+        setEditNeedsTroubleshoot(false);
+        setEditTroubleshootQuestion("");
+        setEditTroubleshootOptions([]);
+        setEditResolvedOption(null);
+        setRightPanelMode('create');
+        setIsRightPanelOpen(true);
+      };
 
-    function renderWeekView() {
-      if (!weekHeaderDays || !weekColumns) return;
-      const days = getActiveWeekDays();
-      weekHeaderDays.innerHTML = days.map(day => {
-        const dayStr = safeDateString(day);
-        return `
-          <div class="flex flex-col items-center">
-            <span class="text-[9px] font-black text-slate-500 dark:text-slate-400">${day.toLocaleString('default', { weekday: 'short' })}</span>
-            <span class="text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center cursor-pointer mt-0.5 ${dayStr === safeDateString(new Date()) ? 'bg-blue-600 text-white' : ''}" data-week-day="${dayStr}">${day.getDate()}</span>
-          </div>
-        `;
-      }).join('');
-      weekHeaderDays.querySelectorAll('[data-week-day]').forEach(el => el.addEventListener('click', () => openDay(el.getAttribute('data-week-day'))));
+      const handleDayTimelineGridClick = (e, targetDayStr) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const clickY = e.clientY - rect.top;
+        let hours = Math.floor(clickY / 60);
+        let mins = Math.round((clickY % 60) / 5) * 5;
+        if (mins === 60) { hours += 1; mins = 0; }
+        if (hours >= 24) hours = 23;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 === 0 ? 12 : hours % 12;
+        const timeStr = `${String(displayHours).padStart(2, '0')}:${String(mins).padStart(2, '0')} ${ampm}`;
 
-      weekColumns.innerHTML = days.map(day => {
-        const dayStr = safeDateString(day);
-        const dayEvents = state.events.filter(e => e.date === dayStr);
-        const eventHtml = dayEvents.map(ev => {
-          const labelDetails = state.labelsList.find(l => l.name === ev.label) || { color: 'bg-blue-50/10' };
-          const startMin = parseTimeToMinutes(ev.time);
-          const duration = ev.duration || 60;
-          return `<div data-event-id="${ev.id}" class="p-1.5 rounded-lg border flex flex-col justify-between overflow-hidden shadow-sm transition-transform hover:scale-[1.01] z-10 ${labelDetails.color}" style="position:absolute;top:${startMin}px;height:${duration}px;left:2px;right:2px;">
-            <span class="text-[10px] font-black truncate">${escapeHtml(ev.title)}</span>
-          </div>`;
-        }).join('');
-        return `<div class="h-[1440px] relative border-r border-slate-200/30 dark:border-slate-800/30 cursor-pointer hover:bg-blue-500/5 transition-all" data-week-column="${dayStr}">${eventHtml}</div>`;
-      }).join('');
-      weekColumns.querySelectorAll('[data-week-column]').forEach(col => col.addEventListener('click', (e) => { if (e.target.closest('[data-event-id]')) return; openDay(col.getAttribute('data-week-column')); }));
-      weekColumns.querySelectorAll('[data-event-id]').forEach(el => el.addEventListener('click', (e) => { e.stopPropagation(); const ev = state.events.find(x => x.id === el.getAttribute('data-event-id')); if (ev) openEvent(ev); }));
-    }
+        setEditDate(targetDayStr || selectedDayString);
+        setEditTime(timeStr);
+        setEditDuration(60);
+        setEditTitle('');
+        setEditDescription('');
+        setEditLabel('event');
+        setEditDetails('');
+        setEditSync('None');
+        setEditImportance('medium');
+        setEditNeedsTroubleshoot(false);
+        setEditResolvedOption(null);
+        setRightPanelMode('create');
+        setIsRightPanelOpen(true);
+      };
 
-    function renderYearView() {
-      if (!yearMiniMonths) return;
-      const targetYear = state.currentDate.getFullYear();
-      yearMiniMonths.innerHTML = Array.from({ length: 12 }, (_, monthIndex) => {
+      const getActiveWeekDays = () => {
+        const selected = new Date(selectedDayString + 'T00:00:00');
+        const sundayOffset = selected.getDate() - selected.getDay();
+        return Array.from({ length: 7 }, (_, i) => new Date(selected.getFullYear(), selected.getMonth(), sundayOffset + i));
+      };
+
+      const renderMiniMonth = (monthIndex) => {
+        const targetYear = currentDate.getFullYear();
         const firstDay = new Date(targetYear, monthIndex, 1).getDay();
         const totalDays = new Date(targetYear, monthIndex + 1, 0).getDate();
-        const miniDays = [];
-        for (let i = 0; i < firstDay; i++) miniDays.push(null);
-        for (let i = 1; i <= totalDays; i++) miniDays.push(i);
+        const miniDays = [...Array(firstDay).fill(null), ...Array.from({ length: totalDays }, (_, i) => i + 1)];
         const targetMonthName = new Date(targetYear, monthIndex, 1).toLocaleString('default', { month: 'short' });
-        return `
-          <div data-mini-month="${monthIndex}" class="border p-4 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm flex flex-col gap-2">
-            <h4 class="text-xs font-black text-blue-600 dark:text-blue-400 capitalize pb-1 border-b border-slate-100 dark:border-slate-800">${targetMonthName}</h4>
-            <div class="grid grid-cols-7 gap-0.5 text-[8px] text-center font-black text-slate-500">${['S','M','T','W','T','F','S'].map(d => `<div>${d}</div>`).join('')}</div>
-            <div class="grid grid-cols-7 gap-0.5 text-[8px] text-center">
-              ${miniDays.map(d => `<div class="py-0.5 rounded-sm font-semibold ${d ? '' : 'text-transparent'}">${d || ''}</div>`).join('')}
+
+        return (
+          <div key={monthIndex} onClick={() => { setCurrentDate(new Date(targetYear, monthIndex, 1)); setCalendarView('month'); }} className={`border p-4 rounded-2xl cursor-pointer transition-all duration-300 shadow-sm flex flex-col gap-2 hover:scale-[1.03] transform ${isDark ? 'bg-slate-900 border-slate-800 hover:border-blue-500' : 'bg-white border-slate-200 hover:border-blue-500'} ${new Date().getMonth() === monthIndex && new Date().getFullYear() === targetYear ? 'ring-2 ring-blue-500/50' : ''}`}>
+            <h4 className="text-xs font-black text-blue-600 dark:text-blue-400 capitalize pb-1 border-b border-slate-100 dark:border-slate-800">{targetMonthName}</h4>
+            <div className="grid grid-cols-7 gap-0.5 text-[8px] text-center font-black text-slate-500">{['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <div key={i}>{d}</div>)}</div>
+            <div className="grid grid-cols-7 gap-0.5 text-[8px] text-center">
+              {miniDays.map((d, i) => <div key={i} className={`py-0.5 rounded-sm font-semibold ${d ? (d === new Date().getDate() && monthIndex === new Date().getMonth() && targetYear === new Date().getFullYear() ? 'bg-blue-600 text-white font-bold' : (isDark ? 'text-slate-300' : 'text-slate-700')) : 'text-transparent'}`}>{d || ''}</div>)}
             </div>
           </div>
-        `;
-      }).join('');
-      yearMiniMonths.querySelectorAll('[data-mini-month]').forEach(el => el.addEventListener('click', () => { state.currentDate = new Date(targetYear, parseInt(el.getAttribute('data-mini-month'), 10), 1); state.currentView = 'month'; renderAll(); }));
-    }
+        );
+      };
 
-    function renderTroubleshoot() {
-      if (!troubleshootList) return;
-      troubleshootList.innerHTML = state.troubleQueue.map(item => `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-start md:items-center shadow-sm">
-          <div class="flex-1">
-            <span class="bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Pending confirmation</span>
-            <h3 class="text-sm font-bold text-slate-800 dark:text-white mt-2">"${escapeHtml(item.rawText)}"</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">💡 ${escapeHtml(item.details)}</p>
-          </div>
-          <div class="flex flex-wrap gap-2 shrink-0">
-            <button data-resolve="${item.id}|event" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Event</button>
-            <button data-resolve="${item.id}|due date" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Due Date</button>
-            <button data-resolve="${item.id}|recurring event" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Recurrence</button>
-            <button data-discard="${item.id}" class="bg-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 text-xs px-4 py-2 rounded-xl transition border border-slate-200 dark:border-transparent font-bold">Discard</button>
-          </div>
-        </div>
-      `).join('');
-      troubleshootList.querySelectorAll('[data-resolve]').forEach(btn => btn.addEventListener('click', () => { const [id, label] = btn.getAttribute('data-resolve').split('|'); const item = state.troubleQueue.find(x => x.id === id); if (item) resolveTrouble(item, label, item.possibleDates[0]); }));
-      troubleshootList.querySelectorAll('[data-discard]').forEach(btn => btn.addEventListener('click', () => { const id = btn.getAttribute('data-discard'); state.troubleQueue = state.troubleQueue.filter(q => q.id !== id); renderAll(); }));
-    }
+      const daysInMonthCount = getDaysInMonth(currentDate);
+      const firstDayOffsetIndex = getFirstDayOfMonth(currentDate);
+      const daysArray = [...Array(firstDayOffsetIndex).fill(null), ...Array.from({ length: daysInMonthCount }, (_, i) => i + 1)];
+      const activeDayEvents = events.filter(e => e.date === selectedDayString);
 
-    function renderOrg() {
-      if (!orgUsersList) return;
-      const orgUsers = [
-        { id: 1, name: 'Alex Johnson', role: 'Product Manager', availableSlots: ['09:00 AM - 10:00 AM', '02:00 PM - 03:00 PM'] },
-        { id: 2, name: 'Maria Chen', role: 'Designer', availableSlots: ['11:00 AM - 12:00 PM', '03:00 PM - 04:00 PM'] },
-        { id: 3, name: 'Sam Patel', role: 'Engineer', availableSlots: ['10:30 AM - 11:30 AM', '04:00 PM - 05:00 PM'] }
-      ];
-      orgUsersList.innerHTML = orgUsers.map(user => `
-        <div class="bg-slate-50 dark:bg-slate-950/60 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-          <div>
-            <h4 class="text-xs font-bold text-slate-800 dark:text-white">${escapeHtml(user.name)}</h4>
-            <span class="text-[10px] text-blue-600 dark:text-blue-300 font-semibold">${escapeHtml(user.role)}</span>
-          </div>
-          <div class="text-right">
-            <span class="text-[10px] text-emerald-500 font-bold block mb-1">Available Spots:</span>
-            <div class="flex gap-1 flex-wrap justify-end">
-              ${user.availableSlots.map(slot => `<button class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10px] px-2 py-1 rounded-lg">${escapeHtml(slot)}</button>`).join('')}
+      const standardHours = Array.from({ length: 24 }, (_, i) => ({
+        label: is24HourClock ? `${String(i).padStart(2, '0')}:00` : `${String(i % 12 === 0 ? 12 : i % 12).padStart(2, '0')}:00 ${i >= 12 ? 'PM' : 'AM'}`,
+        minuteOffset: i * 60
+      }));
+
+      return (
+        <div className={`min-h-screen h-screen flex font-sans select-none overflow-hidden relative ${isDark ? 'dark bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
+          <aside className={`group w-16 hover:w-60 transition-all duration-300 border-r flex flex-col justify-between p-2 shrink-0 z-40 h-screen fixed md:sticky top-0 left-0 ${isDark ? 'bg-slate-950 border-slate-800' : 'bg-white border-slate-200'}`}>
+            <div className="flex flex-col gap-6 overflow-y-auto no-scrollbar">
+              <div className="flex items-center gap-3 px-2 py-2 w-full justify-start h-12">
+                <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                  <img src={isDark ? "https://burchweb-files.sirv.com/nextcalendar/assets/logo-dark.png" : "https://burchweb-files.sirv.com/nextcalendar/assets/logo-light.png"} alt="NEXTCalendar Logo" className="w-10 h-10 object-contain" />
+                </div>
+                <span className={`font-black text-sm tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap overflow-hidden ${isDark ? 'text-white' : 'text-slate-900'}`}>NEXTCALENDAR</span>
+              </div>
+
+              <nav className="flex flex-col gap-2">
+                <button onClick={() => { setActiveTab('calendar'); setCalendarView('month'); }} className={`w-full h-12 flex items-center justify-start rounded-xl transition-all duration-300 overflow-hidden ${activeTab === 'calendar' && calendarView !== 'year' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'}`}><div className="w-12 h-12 flex items-center justify-center shrink-0"><Icons.Calendar /></div><span className="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Grid</span></button>
+                <button onClick={() => setActiveTab('troubleshoot')} className={`w-full h-12 flex items-center justify-start rounded-xl transition-all duration-300 overflow-hidden ${activeTab === 'troubleshoot' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'}`}><div className={`w-12 h-12 flex items-center justify-center shrink-0 rounded-xl ${troubleQueue.length > 0 ? 'text-red-500 bg-red-500/10' : ''}`}><Icons.Troubleshoot /></div><span className="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Alerts</span></button>
+                <button onClick={() => setIsLabelsModalOpen(true)} className="w-full h-12 flex items-center justify-start rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"><div className="w-12 h-12 flex items-center justify-center shrink-0"><Icons.Tag /></div><span className="text-xs tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1">Labels</span></button>
+              </nav>
             </div>
-          </div>
-        </div>
-      `).join('');
-      if (orgToggleVisibilityInput) orgToggleVisibilityInput.checked = state.parentalControlsEnabled;
-      if (orgToggleInvitesInput) orgToggleInvitesInput.checked = state.parentalControlsEnabled;
-      if (orgParentalButton) orgParentalButton.textContent = state.parentalControlsEnabled ? 'Disable Safeguards' : 'Enable Safeguards';
-    }
-
-    function renderLabelsModal() {
-      if (!labelsList) return;
-      labelsList.innerHTML = state.labelsList.map(l => `
-        <div class="flex items-center gap-2 border rounded-full px-3 py-2 text-xs">
-          <span>${escapeHtml(l.name)}</span>
-          <button data-delete-label="${escapeHtml(l.name)}" class="font-bold">×</button>
-        </div>
-      `).join('');
-      labelsList.querySelectorAll('[data-delete-label]').forEach(btn => btn.addEventListener('click', () => { const name = btn.getAttribute('data-delete-label'); state.labelsList = state.labelsList.filter(l => l.name !== name); renderAll(); }));
-      if (labelsInput) labelsInput.value = state.newLabelName;
-    }
-
-    function renderFeedback() {
-      if (feedbackCategorySelect) {
-        const categories = ['Recommendation', 'Bug report', 'Question', 'Other'];
-        feedbackCategorySelect.innerHTML = categories.map(cat => `<option ${cat === state.feedbackCategory ? 'selected' : ''}>${cat}</option>`).join('');
-      }
-      if (feedbackTextarea) feedbackTextarea.value = state.feedbackText;
-      if (feedbackHistory) {
-        feedbackHistory.innerHTML = state.feedbacks.map(f => `<div class="mt-2 text-xs border rounded-xl p-3">${escapeHtml(f.category)}: ${escapeHtml(f.text)}</div>`).join('');
-      }
-    }
-
-    function renderEventPanel() {
-      if (eventTitleInput) eventTitleInput.value = state.edit.title;
-      if (eventDescriptionInput) eventDescriptionInput.value = state.edit.description;
-      if (eventInterpretationHeading) eventInterpretationHeading.textContent = state.edit.title || 'Awaiting Analysis...';
-      if (eventTimeValue) eventTimeValue.textContent = state.edit.time || '12:00 PM';
-      if (eventDurationValue) eventDurationValue.textContent = `${state.edit.duration || 60} Mins`;
-      if (eventDeleteButton) eventDeleteButton.style.display = state.selectedEventId ? 'inline-flex' : 'none';
-      if (eventTroubleshootBox) {
-        eventTroubleshootBox.style.display = state.edit.needsTroubleshoot ? 'flex' : 'none';
-        if (state.edit.needsTroubleshoot) {
-          eventTroubleshootQuestion.textContent = state.edit.troubleshootQuestion || '';
-          eventTroubleshootOptions.innerHTML = (state.edit.troubleshootOptions || []).map(opt => `<button class="text-xs border rounded-lg px-3 py-2">${escapeHtml(opt)}</button>`).join('');
-        }
-      }
-    }
-
-    function renderThemeControls() {
-      if (themeSettingSelect) themeSettingSelect.value = state.themeMode;
-      if (clock12Button && clock24Button) {
-        clock12Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? '' : 'bg-blue-600 text-white'}`;
-        clock24Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? 'bg-blue-600 text-white' : ''}`;
-      }
-      if (compactViewButton) compactViewButton.textContent = state.isCompact ? 'Comfort view' : 'Compact view';
-    }
-
-    function renderCalendarControls() {
-      renderCalendarHeader();
-      renderVisibility();
-      renderThemeControls();
-    }
-
-    function renderAll() {
-      renderCalendarControls();
-      renderMonthView();
-      renderDayView();
-      renderWeekView();
-      renderYearView();
-      renderTroubleshoot();
-      renderOrg();
-      renderLabelsModal();
-      renderFeedback();
-      renderEventPanel();
-      renderToast();
-    }
-
-    function openDay(dayStr) {
-      state.selectedDayString = dayStr;
-      state.currentView = 'day';
-      state.activeTab = 'calendar';
-      renderAll();
-    }
-
-    function openEvent(ev) {
-      state.selectedEventId = ev.id;
-      state.edit = {
-        title: ev.title || '',
-        description: ev.description || '',
-        date: ev.date || state.selectedDayString,
-        time: ev.time || '12:00 PM',
-        duration: ev.duration || 60,
-        label: ev.label || 'event',
-        sync: ev.syncPlatform || 'None',
-        importance: ev.importance || 'medium',
-        details: ev.details || '',
-        needsTroubleshoot: !!ev.needsTroubleshoot,
-        troubleshootQuestion: ev.troubleshootQuestion || '',
-        troubleshootOptions: ev.troubleshootOptions || [],
-        resolvedOption: ev.resolvedOption || null
-      };
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function openCreateEvent() {
-      state.selectedEventId = null;
-      state.edit = {
-        title: '',
-        description: '',
-        date: state.selectedDayString,
-        time: '12:00 PM',
-        duration: 60,
-        label: 'event',
-        sync: 'None',
-        importance: 'medium',
-        details: '',
-        needsTroubleshoot: false,
-        troubleshootQuestion: '',
-        troubleshootOptions: [],
-        resolvedOption: null
-      };
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function handleDayTimelineGridClick(e) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickY = e.clientY - rect.top;
-      let hours = Math.floor(clickY / 60);
-      let mins = Math.round((clickY % 60) / 5) * 5;
-      if (mins === 60) { hours += 1; mins = 0; }
-      if (hours >= 24) hours = 23;
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 === 0 ? 12 : hours % 12;
-      const timeStr = `${String(displayHours).padStart(2, '0')}:${String(mins).padStart(2, '0')} ${ampm}`;
-      state.edit = { ...state.edit, date: state.selectedDayString, time: timeStr, duration: 60, title: '', description: '', label: 'event', details: '', sync: 'None', importance: 'medium', needsTroubleshoot: false, resolvedOption: null };
-      state.selectedEventId = null;
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function resolveTrouble(item, label, date) {
-      const newEvent = {
-        id: 'e_' + Date.now(),
-        title: item.rawText.split(' ')[0] || 'Resolved Item',
-        description: item.rawText,
-        date: safeDateString(new Date()),
-        time: '12:00 PM',
-        duration: 60,
-        label,
-        importance: 'medium',
-        details: date ? `Resolved: ${date}` : '',
-        syncPlatform: 'None',
-        needsTroubleshoot: false,
-        troubleshootQuestion: '',
-        troubleshootOptions: [],
-        resolvedOption: date || null
-      };
-      state.events = [...state.events, newEvent];
-      state.troubleQueue = state.troubleQueue.filter(q => q.id !== item.id);
-      triggerToast('Trouble resolved and event added.');
-      renderAll();
-    }
-
-    function simulateLocalAI(text) {
-      const lowercase = text.toLowerCase();
-      let label = 'event';
-      if (lowercase.includes('due') || lowercase.includes('deadline') || lowercase.includes('submit')) label = 'due date';
-      else if (lowercase.includes('every') || lowercase.includes('weekly') || lowercase.includes('recurring')) label = 'recurring event';
-      let time = '12:00 PM';
-      const timeMatch = text.match(/(\d+):?(\d+)?\s*(am|pm)/i);
-      if (timeMatch) time = timeMatch[0].toUpperCase();
-      let targetDate = safeDateString(new Date());
-      if (lowercase.includes('tomorrow')) targetDate = safeDateString(new Date(Date.now() + 86400000));
-      let importance = 'medium';
-      if (lowercase.includes('important') || lowercase.includes('urgent') || lowercase.includes('asap')) importance = 'high';
-      const isTroubleshootDemo = lowercase.includes("cafe") && lowercase.includes("mama");
-      return {
-        title: isTroubleshootDemo ? 'Lunch' : (text.split('at')[0].trim().substring(0, 40) || 'Synthesized Task'),
-        date: targetDate,
-        time,
-        duration: 60,
-        label,
-        importance,
-        needsTroubleshoot: isTroubleshootDemo,
-        troubleshootQuestion: isTroubleshootDemo ? "Did you mean at the Cafe or at TGI Fridays?" : "",
-        troubleshootOptions: isTroubleshootDemo ? ["Cafe", "TGI Fridays"] : []
-      };
-    }
-
-    async function analyzeEvent() {
-      const textContext = (eventDescriptionInput.value || '').trim();
-      if (!textContext) {
-        triggerToast('Please write details into the Notecard');
-        return;
-      }
-      const localParsed = simulateLocalAI(textContext);
-      try {
-        const response = await fetch(FEATHERLESS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${FEATHERLESS_API_KEY}` },
-          body: JSON.stringify({
-            model: FEATHERLESS_MODEL,
-            messages: [
-              { role: "system", content: 'You are a professional calendar scheduling assistant. Parse the calendar entry. Respond ONLY in JSON matching this exact layout: {"title":"string","time":"HH:MM AM/PM","duration":60,"label":"event","importance":"medium"}.' },
-              { role: "user", content: `Analyze this note text: "${textContext}"` }
-            ]
-          })
-        });
-        if (!response.ok) throw new Error('API Limit or Request Error');
-        const data = await response.json();
-        const rawResult = data.choices[0].message.content || '';
-        const jsonText = rawResult.includes('{') ? rawResult.slice(rawResult.indexOf('{'), rawResult.lastIndexOf('}') + 1) : '{}';
-        const parsed = JSON.parse(jsonText);
-        state.edit.title = parsed.title || localParsed.title;
-        state.edit.time = parsed.time || localParsed.time;
-        state.edit.duration = parsed.duration || 60;
-        state.edit.label = parsed.label || 'event';
-        state.edit.importance = parsed.importance || 'medium';
-        state.edit.details = 'Analyzed in real-time by NEXTCalendar Llama AI.';
-        state.edit.needsTroubleshoot = textContext.toLowerCase().includes('cafe') && textContext.toLowerCase().includes('mama');
-        state.edit.troubleshootQuestion = state.edit.needsTroubleshoot ? 'Did you mean at the Cafe or at TGI Fridays?' : '';
-        state.edit.troubleshootOptions = state.edit.needsTroubleshoot ? ['Cafe', 'TGI Fridays'] : [];
-        triggerToast('AI analysis complete!');
-      } catch (err) {
-        state.edit.title = localParsed.title;
-        state.edit.time = localParsed.time;
-        state.edit.duration = localParsed.duration;
-        state.edit.label = localParsed.label;
-        state.edit.importance = localParsed.importance;
-        state.edit.details = 'Parsed locally via fallback engine.';
-        state.edit.needsTroubleshoot = localParsed.needsTroubleshoot;
-        state.edit.troubleshootQuestion = localParsed.troubleshootQuestion;
-        state.edit.troubleshootOptions = localParsed.troubleshootOptions;
-        triggerToast('AI offline. Processed via local parser!');
-      }
-      renderAll();
-    }
-
-    function saveEvent() {
-      const title = (eventTitleInput.value || state.edit.title || '').trim() || 'Untitled Event';
-      const description = (eventDescriptionInput.value || state.edit.description || '').trim();
-      const eventData = {
-        id: state.selectedEventId || `e_${Date.now()}`,
-        title,
-        description,
-        date: state.edit.date || state.selectedDayString,
-        time: state.edit.time || '12:00 PM',
-        duration: state.edit.duration || 60,
-        label: state.edit.label || 'event',
-        importance: state.edit.importance || 'medium',
-        details: state.edit.details || '',
-        syncPlatform: state.edit.sync || 'None',
-        needsTroubleshoot: state.edit.needsTroubleshoot || false,
-        troubleshootQuestion: state.edit.troubleshootQuestion || '',
-        troubleshootOptions: state.edit.troubleshootOptions || [],
-        resolvedOption: state.edit.resolvedOption || null
-      };
-      if (state.selectedEventId) {
-        state.events = state.events.map(ev => ev.id === state.selectedEventId ? eventData : ev);
-      } else {
-        state.events = [...state.events, eventData];
-      }
-      state.isEventPanelOpen = false;
-      triggerToast(state.selectedEventId ? 'Event updated.' : 'Event created.');
-      renderAll();
-    }
-
-    function deleteEvent() {
-      if (!state.selectedEventId) return;
-      state.events = state.events.filter(ev => ev.id !== state.selectedEventId);
-      state.isEventPanelOpen = false;
-      triggerToast('Event deleted.');
-      renderAll();
-    }
-
-    function renderThemeControls() {
-      if (themeSettingSelect) themeSettingSelect.value = state.themeMode;
-      if (clock12Button && clock24Button) {
-        clock12Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? '' : 'bg-blue-600 text-white'}`;
-        clock24Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? 'bg-blue-600 text-white' : ''}`;
-      }
-      if (compactViewButton) compactViewButton.textContent = state.isCompact ? 'Comfort view' : 'Compact view';
-    }
-
-    function renderCalendarControls() {
-      renderCalendarHeader();
-      renderVisibility();
-      renderThemeControls();
-    }
-
-    function renderAll() {
-      renderCalendarControls();
-      renderMonthView();
-      renderDayView();
-      renderWeekView();
-      renderYearView();
-      renderTroubleshoot();
-      renderOrg();
-      renderLabelsModal();
-      renderFeedback();
-      renderEventPanel();
-      renderToast();
-    }
-
-    function renderTroubleshoot() {
-      if (!troubleshootList) return;
-      troubleshootList.innerHTML = state.troubleQueue.map(item => `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-start md:items-center shadow-sm">
-          <div class="flex-1">
-            <span class="bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Pending confirmation</span>
-            <h3 class="text-sm font-bold text-slate-800 dark:text-white mt-2">"${escapeHtml(item.rawText)}"</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">💡 ${escapeHtml(item.details)}</p>
-          </div>
-          <div class="flex flex-wrap gap-2 shrink-0">
-            <button data-resolve="${item.id}|event" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Event</button>
-            <button data-resolve="${item.id}|due date" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Due Date</button>
-            <button data-resolve="${item.id}|recurring event" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Recurrence</button>
-            <button data-discard="${item.id}" class="bg-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 text-xs px-4 py-2 rounded-xl transition border border-slate-200 dark:border-transparent font-bold">Discard</button>
-          </div>
-        </div>
-      `).join('');
-      troubleshootList.querySelectorAll('[data-resolve]').forEach(btn => btn.addEventListener('click', () => {
-        const [id, label] = btn.getAttribute('data-resolve').split('|');
-        const item = state.troubleQueue.find(x => x.id === id);
-        if (item) resolveTrouble(item, label, item.possibleDates[0]);
-      }));
-      troubleshootList.querySelectorAll('[data-discard]').forEach(btn => btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-discard');
-        state.troubleQueue = state.troubleQueue.filter(q => q.id !== id);
-        renderAll();
-      }));
-    }
-
-    function renderOrg() {
-      if (!orgUsersList) return;
-      const orgUsers = [
-        { id: 1, name: 'Alex Johnson', role: 'Product Manager', availableSlots: ['09:00 AM - 10:00 AM', '02:00 PM - 03:00 PM'] },
-        { id: 2, name: 'Maria Chen', role: 'Designer', availableSlots: ['11:00 AM - 12:00 PM', '03:00 PM - 04:00 PM'] },
-        { id: 3, name: 'Sam Patel', role: 'Engineer', availableSlots: ['10:30 AM - 11:30 AM', '04:00 PM - 05:00 PM'] }
-      ];
-      orgUsersList.innerHTML = orgUsers.map(user => `
-        <div class="bg-slate-50 dark:bg-slate-950/60 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-          <div>
-            <h4 class="text-xs font-bold text-slate-800 dark:text-white">${escapeHtml(user.name)}</h4>
-            <span class="text-[10px] text-blue-600 dark:text-blue-300 font-semibold">${escapeHtml(user.role)}</span>
-          </div>
-          <div class="text-right">
-            <span class="text-[10px] text-emerald-500 font-bold block mb-1">Available Spots:</span>
-            <div class="flex gap-1 flex-wrap justify-end">
-              ${user.availableSlots.map(slot => `<button class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[10px] px-2 py-1 rounded-lg">${escapeHtml(slot)}</button>`).join('')}
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800/60">
+              <button onClick={() => setIsSettingsModalOpen(true)} className="w-full h-12 flex items-center justify-start rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-all duration-300 overflow-hidden"><div className="w-12 h-12 flex items-center justify-center shrink-0"><Icons.Dots /></div><span className="text-xs tracking-wider opacity-0 group-hover:opacity-100 ml-1">Settings</span></button>
             </div>
-          </div>
+          </aside>
+
+          <main className="flex-1 flex flex-col overflow-hidden h-full">
+            <header className={`border-b p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 ${isDark ? 'border-slate-800 bg-slate-900/20' : 'border-slate-200 bg-white/40'}`}>
+              <div><h1 className={`text-2xl font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>NEXTCalendar</h1><p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Minimalist AI Scheduler</p></div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button onClick={handleCreateNewClick} className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-blue-600/20"><Icons.Plus /> Create Event</button>
+                <button onClick={() => setIsCompact(!isCompact)} className={`border text-xs px-3 py-2.5 rounded-xl transition ${isDark ? 'bg-slate-900 border-slate-800 text-slate-300' : 'bg-white border-slate-200 text-slate-700'}`}>Compact view</button>
+              </div>
+            </header>
+
+            {activeTab === 'calendar' && (
+              <div className="flex-1 p-4 md:p-6 flex flex-col gap-4 overflow-hidden h-full">
+                <div className="flex justify-between items-center flex-wrap gap-4 shrink-0">
+                  <h2 className="text-xl font-bold tracking-tight">{getFriendlyDateHeader()}</h2>
+                  <div className={`p-1 border rounded-xl shadow-sm flex gap-1 relative items-center ${isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200'}`}>
+                    {['day', 'week', 'month', 'year'].map((view) => <button key={view} onClick={() => setCalendarView(view)} className={`text-[11px] font-black px-3 py-1 rounded-lg transition-all capitalize ${calendarView === view ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>{view}</button>)}
+                  </div>
+                </div>
+
+                {calendarView === 'month' && (
+                  <div className={`grid grid-cols-7 gap-1.5 border rounded-2xl overflow-hidden shadow-sm flex-1 ${isDark ? 'bg-slate-900/10 border-slate-800/40' : 'bg-white border-slate-200'}`}>
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => <div key={idx} className={`p-3 text-center text-xs font-bold border-r border-b ${isDark ? 'bg-slate-900/40 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>{day}</div>)}
+                    {daysArray.map((day, idx) => {
+                      const todayObj = new Date();
+                      const isToday = day === todayObj.getDate() && currentDate.getMonth() === todayObj.getMonth() && currentDate.getFullYear() === todayObj.getFullYear();
+                      const formattedDayString = day ? `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}` : '';
+                      const dayEvents = events.filter(e => e.date === formattedDayString);
+                      return (
+                        <div key={idx} onClick={() => day && handleMonthCellBackgroundClick(formattedDayString)} className={`min-h-[110px] border-r border-b p-2 flex flex-col relative group cursor-pointer ${day ? (isDark ? 'bg-slate-900/15' : 'bg-white') : 'bg-transparent'} ${isToday ? 'border-2 border-blue-500 bg-blue-50/5' : ''} ${isDark ? 'border-slate-800 hover:bg-slate-900/30' : 'border-slate-200 hover:bg-slate-50'}`}>
+                          {day && <div className="flex justify-between items-center mb-1"><span onClick={(e) => { e.stopPropagation(); handleDayCellClick(formattedDayString); }} className={`text-xs font-bold px-1.5 py-0.5 rounded-lg hover:bg-blue-600 hover:text-white transition-colors ${isToday ? 'bg-blue-600 text-white font-black' : (isDark ? 'text-slate-500' : 'text-slate-600')}`}>{day}</span></div>}
+                          <div className="flex-1 flex flex-col gap-1 overflow-y-auto max-h-[120px]">
+                            {dayEvents.map(event => {
+                              const labelDetails = labelsList.find(l => l.name === event.label) || { color: 'bg-blue-50/10' };
+                              return <div key={event.id} onClick={(e) => handleEventClick(e, event)} className={`p-1 rounded border text-[9px] font-bold truncate ${labelDetails.color}`}>{event.title}</div>;
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {calendarView === 'day' && (
+                  <div className={`flex-1 flex flex-col border rounded-3xl p-0.5 shadow-sm overflow-hidden h-full ${isDark ? 'bg-slate-900/40 border-slate-800/60' : 'bg-white border-slate-200'}`}>
+                    <div ref={dayTimelineScrollRef} className="flex-1 overflow-y-auto pr-2 scroll-smooth rounded-2xl relative bg-slate-50/50 dark:bg-slate-950/20">
+                      <div className="flex relative w-full h-[1440px]">
+                        <div className="w-16 flex flex-col select-none border-r border-slate-200 dark:border-slate-800/60 bg-slate-100/50 dark:bg-slate-900/20">
+                          {standardHours.map((hour, idx) => <div key={idx} className="h-[60px] text-[10px] font-black text-slate-500 pr-2 pt-1.5 text-right border-b border-slate-200/50">{hour.label}</div>)}
+                        </div>
+                        <div onClick={(e) => handleDayTimelineGridClick(e, selectedDayString)} className="flex-1 h-[1440px] relative cursor-pointer">
+                          {Array.from({ length: 24 }).map((_, idx) => <div key={idx} className="absolute left-0 right-0 border-b border-slate-200/50 pointer-events-none" style={{ top: `${(idx + 1) * 60}px` }} />)}
+                          {activeDayEvents.map((event) => {
+                            const labelDetails = labelsList.find(l => l.name === event.label) || { color: 'bg-blue-50/10' };
+                            const startMin = parseTimeToMinutes(event.time);
+                            const duration = event.duration || 60;
+                            return <div key={event.id} onClick={(e) => handleEventClick(e, event)} style={{ position: 'absolute', top: `${startMin}px`, height: `${duration}px`, left: '8px', right: '8px' }} className={`p-3 rounded-xl border flex flex-col justify-between overflow-hidden shadow-sm z-10 ${labelDetails.color}`}><div className="flex justify-between items-center"><span className="text-xs font-black truncate">{event.title}</span><span className="text-[9px] font-bold shrink-0 opacity-80">{event.time}</span></div><p className="text-[10px] truncate mt-1">{event.description}</p></div>;
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {calendarView === 'week' && (
+                  <div className={`flex-1 flex flex-col border rounded-3xl p-0.5 shadow-sm overflow-hidden h-full ${isDark ? 'bg-slate-900/40 border-slate-800/60' : 'bg-white border-slate-200'}`}>
+                    <div className="flex shrink-0 border-b border-slate-200 bg-slate-100 dark:bg-slate-900/30">
+                      <div className="w-16 shrink-0 border-r border-slate-200" />
+                      <div className="flex-1 grid grid-cols-7 text-center py-2">
+                        {getActiveWeekDays().map((day, idx) => (
+                          <div key={idx} className="flex flex-col items-center">
+                            <span className="text-[9px] font-black text-slate-500">{day.toLocaleString('default', { weekday: 'short' })}</span>
+                            <span onClick={() => handleDayCellClick(day.toISOString().split('T')[0])} className="text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center cursor-pointer mt-0.5 hover:bg-blue-600 hover:text-white transition-colors">{day.getDate()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div ref={dayTimelineScrollRef} className="flex-1 overflow-y-auto pr-2 scroll-smooth rounded-b-2xl relative bg-slate-50/50 dark:bg-slate-950/20">
+                      <div className="flex relative w-full h-[1440px]">
+                        <div className="w-16 flex flex-col select-none border-r border-slate-200 dark:border-slate-800/60 bg-slate-100/50 dark:bg-slate-900/20">
+                          {standardHours.map((hour, idx) => <div key={idx} className="h-[60px] text-[10px] font-black text-slate-500 pr-2 pt-1.5 text-right border-b border-slate-200/50">{hour.label}</div>)}
+                        </div>
+                        <div className="flex-1 h-[1440px] grid grid-cols-7 relative">
+                          {getActiveWeekDays().map((day, colIdx) => {
+                            const dayStr = day.toISOString().split('T')[0];
+                            const dayEvents = events.filter(e => e.date === dayStr);
+                            return (
+                              <div key={colIdx} onClick={(e) => handleDayTimelineGridClick(e, dayStr)} className="h-[1440px] relative border-r border-slate-200/30 cursor-pointer hover:bg-blue-500/5 transition-all">
+                                {dayEvents.map(event => {
+                                  const labelDetails = labelsList.find(l => l.name === event.label) || { color: 'bg-blue-50/10' };
+                                  const startMin = parseTimeToMinutes(event.time);
+                                  const duration = event.duration || 60;
+                                  return <div key={event.id} onClick={(e) => handleEventClick(e, event)} style={{ position: 'absolute', top: `${startMin}px`, height: `${duration}px`, left: '2px', right: '2px' }} className={`p-1.5 rounded-lg border flex flex-col justify-between overflow-hidden shadow-sm z-10 ${labelDetails.color}`}><span className="text-[10px] font-black truncate">{event.title}</span></div>;
+                                })}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {calendarView === 'year' && <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-1 overflow-y-auto pr-1">{Array.from({ length: 12 }, (_, i) => renderMiniMonth(i))}</div>}
+              </div>
+            )}
+
+            {activeTab === 'troubleshoot' && (
+              <div className="flex-1 p-6 flex flex-col gap-4 overflow-y-auto">
+                <div className="max-w-4xl mx-auto w-full">
+                  <h2 className="text-2xl font-bold mb-1">NEXTCalendar Agent Resolution Hub</h2>
+                  <p className="text-xs text-slate-500 mb-6">Clarify raw synthesized text snippets which did not meet parsing thresholds.</p>
+                  {troubleQueue.length === 0 ? <div className="bg-blue-600/10 border border-blue-500/20 p-8 rounded-2xl text-center"><span className="text-3xl">✨</span><h3 className="text-sm font-bold text-blue-500 mt-2">All Confusions Resolved</h3></div> : <div className="grid gap-4">{troubleQueue.map(item => (
+                    <div key={item.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-start md:items-center shadow-sm">
+                      <div className="flex-1">
+                        <span className="bg-amber-500/10 text-amber-600 border border-amber-500/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full">Pending confirmation</span>
+                        <h3 className="text-sm font-bold mt-2">"{item.rawText}"</h3>
+                        <p className="text-xs text-slate-500 mt-1">💡 {item.details}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2 shrink-0">
+                        <button onClick={() => resolveTrouble(item, 'event', item.possibleDates?.[0])} className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Event</button>
+                        <button onClick={() => resolveTrouble(item, 'due date', item.possibleDates?.[0])} className="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Due Date</button>
+                        <button onClick={() => resolveTrouble(item, 'recurring event', item.possibleDates?.[0])} className="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Confirm Recurrence</button>
+                        <button onClick={() => setTroubleQueue(troubleQueue.filter(q => q.id !== item.id))} className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-4 py-2 rounded-xl transition border border-slate-200 font-bold">Discard</button>
+                      </div>
+                    </div>
+                  ))}</div>}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'org' && (
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-4xl mx-auto">
+                  <h2 className="text-2xl font-bold mb-1">Interorganizational Communication</h2>
+                  <p className="text-xs text-slate-500 mb-6">Coordinate schedule availability securely with workspace directories and parental safeguards.</p>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="md:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl flex flex-col gap-4 shadow-sm">
+                      <h3 className="text-sm font-bold text-blue-500">Shared Directory Spot Locator</h3>
+                      <div className="space-y-3">
+                        {orgUsers.map(user => (
+                          <div key={user.id} className="bg-slate-50 dark:bg-slate-950/60 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                            <div><h4 className="text-xs font-bold">{user.name}</h4><span className="text-[10px] text-blue-500 font-semibold">{user.role}</span></div>
+                            <div className="text-right">
+                              <span className="text-[10px] text-emerald-500 font-bold block mb-1">Available Spots:</span>
+                              <div className="flex gap-1 flex-wrap justify-end">
+                                {user.availableSlots.map(slot => <button key={slot} onClick={() => { setEditTitle(`Meeting with ${user.name.split(' ')[0]}`); setEditDate(new Date().toISOString().split('T')[0]); setEditTime(slot.split(' - ')[0]); setEditLabel('event'); setEditDescription(`Scheduled inside team sync segment.`); setEditSync('None'); setEditImportance('medium'); setRightPanelMode('create'); setIsRightPanelOpen(true); }} className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-[9px] px-2 py-1 rounded-lg hover:bg-emerald-500/20 transition">{slot}</button>)}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl flex flex-col justify-between shadow-sm">
+                      <div>
+                        <h3 className="text-sm font-bold text-amber-500 mb-2">Parental Controls Dashboard</h3>
+                        <p className="text-xs text-slate-500 mb-4">Protect child agendas, restrict external workspace discoverability, and audit auto-created tasks.</p>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800"><span className="text-xs">Limit calendar visibility</span><input type="checkbox" defaultChecked className="rounded border-slate-300 text-blue-600 focus:ring-0" /></div>
+                          <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800"><span className="text-xs">Verify external invites</span><input type="checkbox" defaultChecked className="rounded border-slate-300 text-blue-600 focus:ring-0" /></div>
+                        </div>
+                      </div>
+                      <button onClick={() => { setParentalControlsEnabled(!parentalControlsEnabled); triggerToast("Parental preferences updated."); }} className="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold py-2.5 rounded-xl mt-4 transition">Enable Safeguards</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'feedback' && (
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-xl">
+                  <h2 className="text-xl font-bold mb-1">Recommendations & Feedback</h2>
+                  <p className="text-xs text-slate-500 mb-6">Submit feature suggestions or report issues directly into our product workspace.</p>
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label className="text-xs text-slate-500 block mb-1">Feedback Category:</label>
+                      <select value={feedbackCategory} onChange={(e) => setFeedbackCategory(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-xs outline-none">
+                        <option value="Recommendation">💡 Recommendation / Suggestion</option>
+                        <option value="Bug">🐛 Bug or Interface Flaw</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-slate-500 block mb-1">Description:</label>
+                      <textarea rows={4} value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)} placeholder="Describe your suggestion or layout issue..." className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs outline-none" />
+                    </div>
+                    <button onClick={() => { if (!feedbackText.trim()) return; setFeedbacks([...feedbacks, { category: feedbackCategory, text: feedbackText, date: new Date().toLocaleDateString() }]); setFeedbackText(''); triggerToast("Feedback received! Thank you."); }} className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-md shadow-blue-500/10">Submit Form</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {isLabelsModalOpen && (
+            <div onClick={() => setIsLabelsModalOpen(false)} className="fixed inset-0 bg-slate-950/65 backdrop-blur-md z-50 flex items-center justify-center p-4">
+              <div onClick={(e) => e.stopPropagation()} className={`border rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col justify-between max-h-[90vh] overflow-y-auto ${isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+                <div>
+                  <div className="flex justify-between items-center mb-5">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Customize Preset Labels</h3>
+                    <button onClick={() => setIsLabelsModalOpen(false)} className="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800"><Icons.Close /></button>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {labelsList.map(label => <div key={label.name} className={`px-2.5 py-1 rounded-xl text-[10px] border flex items-center gap-1.5 ${label.color}`}><span>{label.name}</span><button onClick={() => deleteLabel(label.name)} className="text-rose-600 font-bold ml-1 text-xs">✕</button></div>)}
+                  </div>
+                  <div className="flex gap-2">
+                    <input type="text" placeholder="Create custom label preset..." value={newLabelName} onChange={(e) => setNewLabelName(e.target.value)} className={`flex-1 border text-xs px-3 py-2 rounded-xl outline-none ${isDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                    <button onClick={addNewLabel} className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 rounded-xl font-bold transition">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isSettingsModalOpen && (
+            <div onClick={() => setIsSettingsModalOpen(false)} className="fixed inset-0 bg-slate-950/65 backdrop-blur-md z-50 flex items-center justify-center p-4">
+              <div onClick={(e) => e.stopPropagation()} className={`border rounded-3xl w-full max-w-md p-6 shadow-2xl flex flex-col justify-between max-h-[92vh] overflow-y-auto ${isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Configurations</h3>
+                    <button onClick={() => setIsSettingsModalOpen(false)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><Icons.Close /></button>
+                  </div>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs uppercase font-bold tracking-widest text-slate-500">Interface Theme</label>
+                      <select value={themeMode} onChange={(e) => setThemeMode(e.target.value)} className={`w-full border rounded-xl p-2.5 text-xs outline-none ${isDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`}>
+                        <option value="light">Light theme</option>
+                        <option value="dark">Dark theme</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                      <label className="text-xs uppercase font-bold tracking-widest text-slate-500">Time Format</label>
+                      <div className="flex gap-2">
+                        <button onClick={() => setIs24HourClock(false)} className={`flex-1 py-2 rounded-xl text-xs font-bold transition border ${!is24HourClock ? 'bg-blue-600 text-white border-blue-600' : (isDark ? 'bg-slate-950 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700')}`}>12-Hour Clock</button>
+                        <button onClick={() => setIs24HourClock(true)} className={`flex-1 py-2 rounded-xl text-xs font-bold transition border ${is24HourClock ? 'bg-blue-600 text-white border-blue-600' : (isDark ? 'bg-slate-950 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700')}`}>24-Hour Clock</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isRightPanelOpen && (
+            <div onClick={() => setIsRightPanelOpen(false)} className="fixed inset-0 bg-slate-950/65 backdrop-blur-md z-50 flex items-center justify-center p-4">
+              <div onClick={(e) => e.stopPropagation()} className={`flex flex-col justify-between max-h-[92vh] border shadow-2xl overflow-y-auto ${isDark ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'} ${isCompact ? 'w-full md:w-[600px] h-screen fixed top-0 right-0 z-50 p-6 rounded-l-3xl' : 'w-full max-w-4xl p-6 rounded-3xl'}`}>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">{rightPanelMode === 'create' ? 'Create Event with AI Notecard' : rightPanelMode === 'edit' ? 'Edit Event Details' : 'Event Summary'}</h3>
+                  <button onClick={() => setIsRightPanelOpen(false)} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><Icons.Close /></button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start flex-1 overflow-y-auto pb-4">
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label className="text-[10px] uppercase font-bold tracking-widest text-slate-500 block mb-1">Headline Title (Optional)</label>
+                      <input type="text" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className={`w-full border rounded-xl p-3 text-xs outline-none ${isDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                    </div>
+                    <div>
+                      <label className="text-[10px] uppercase font-bold tracking-widest text-slate-500 block mb-1">Big Notecard notes (AI Parser Context)</label>
+                      <textarea rows={8} value={editDescription} onChange={(e) => setEditDescription(e.target.value)} className={`w-full border rounded-xl p-3 text-xs outline-none resize-none ${isDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                    </div>
+                    <div className="pt-2">
+                      <button onClick={handleSaveEventAndAnalyze} className="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-3.5 rounded-xl transition">Analyze</button>
+                    </div>
+                  </div>
+
+                  <div className={`border p-5 rounded-2xl flex flex-col gap-4 h-full ${isDark ? 'bg-slate-950/40 border-slate-800/80' : 'bg-slate-50 border-slate-200/80'}`}>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-blue-500 dark:text-blue-400 block mb-1">NEXTCalendar Agent interpretation</span>
+                      <p className="text-[11px] font-bold text-slate-500">Interpreted Title:</p>
+                      <h4 className="text-sm font-black leading-tight">{editTitle.trim() || "Awaiting Analysis..."}</h4>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-xs border-t border-slate-100 dark:border-slate-800/60 pt-3">
+                      <div><span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 block mb-0.5">Time</span><p className="font-bold">{editTime}</p></div>
+                      <div><span className="text-[10px] uppercase font-bold tracking-widest text-slate-500 block mb-0.5">Duration</span><p className="font-bold">{editDuration} Mins</p></div>
+                    </div>
+
+                    {editNeedsTroubleshoot && (
+                      <div className={`border p-4 rounded-xl flex flex-col gap-2.5 ${isDark ? 'bg-slate-900/60 border-slate-800/60' : 'bg-red-500/5 border-red-500/10'}`}>
+                        <div className="flex items-center gap-1.5"><Icons.Warning /><span className="text-xs font-black text-red-500 uppercase tracking-wider">Quick question</span></div>
+                        <p className="text-[11px] text-slate-500">{editTroubleshootQuestion}</p>
+                        <div className="flex flex-col gap-1.5 mt-1">
+                          {editTroubleshootOptions.map(option => <button key={option} onClick={() => { setEditResolvedOption(option); setEditTitle(editTitle.trim() ? editTitle : 'Lunch'); setEditDetails(`Resolved location: ${option}`); triggerToast(`Resolved location: ${option}`); }} className={`w-full py-2 rounded-lg text-xs font-bold transition border text-left px-3 ${editResolvedOption === option ? 'bg-blue-600 text-white border-blue-600 shadow-md' : (isDark ? 'bg-slate-950 border-slate-800 text-slate-200 hover:bg-slate-800' : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-50')}`}>{option}</button>)}
+                          <div className="flex gap-1.5 mt-1 items-center">
+                            <input type="text" placeholder="Other (please type)" value={customOverrideText} onChange={(e) => setCustomOverrideText(e.target.value)} className={`flex-1 border rounded-lg p-2 text-xs outline-none ${isDark ? 'bg-slate-950 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`} />
+                            <button onClick={() => { if (!customOverrideText.trim()) return; setEditResolvedOption(customOverrideText); setEditTitle(editTitle.trim() ? editTitle : 'Lunch'); setEditDetails(`Resolved override: ${customOverrideText}`); }} className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm">Apply</button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-200 dark:border-slate-800 pt-4 flex gap-2 justify-between mt-6">
+                  {rightPanelMode === 'view' && selectedEvent && <button onClick={() => handleDeleteEvent(selectedEvent.id)} className="bg-rose-900/10 dark:bg-rose-900/30 hover:bg-rose-600 text-rose-600 hover:text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">Delete Event</button>}
+                  <div className="flex gap-2 ml-auto">
+                    <button onClick={() => setIsRightPanelOpen(false)} className={`text-xs font-bold px-4 py-2.5 rounded-xl transition border ${isDark ? 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'}`}>Cancel</button>
+                    {(rightPanelMode === 'create' || rightPanelMode === 'edit') && (
+                      <button onClick={() => {
+                        if (!editTitle.trim() && !editDescription.trim()) return triggerToast("Please provide event details first!");
+                        const finalTitle = editTitle.trim() || 'AI Scheduled Event';
+                        const newEv = {
+                          id: selectedEvent ? selectedEvent.id : 'e_' + Date.now(),
+                          title: finalTitle,
+                          description: editDescription,
+                          date: editDate || selectedDayString,
+                          time: editTime,
+                          duration: editDuration,
+                          label: editLabel,
+                          syncPlatform: editSync,
+                          importance: editImportance,
+                          details: editDetails,
+                          needsTroubleshoot: editNeedsTroubleshoot,
+                          troubleshootQuestion: editTroubleshootQuestion,
+                          troubleshootOptions: editTroubleshootOptions,
+                          resolvedOption: editResolvedOption
+                        };
+                        setEvents(prev => rightPanelMode === 'create' ? [...prev, newEv] : prev.map(ev => ev.id === selectedEvent.id ? newEv : ev));
+                        setIsRightPanelOpen(false);
+                      }} className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition shadow-md shadow-blue-500/10">{rightPanelMode === 'create' ? 'Create Event' : 'Save Changes'}</button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {toastMessage && <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg">{toastMessage}</div>}
         </div>
-      `).join('');
-      if (orgToggleVisibilityInput) orgToggleVisibilityInput.checked = state.parentalControlsEnabled;
-      if (orgToggleInvitesInput) orgToggleInvitesInput.checked = state.parentalControlsEnabled;
-      if (orgParentalButton) orgParentalButton.textContent = state.parentalControlsEnabled ? 'Disable Safeguards' : 'Enable Safeguards';
+      );
     }
 
-    function renderLabelsModal() {
-      if (!labelsList) return;
-      labelsList.innerHTML = state.labelsList.map(l => `
-        <div class="flex items-center gap-2 border rounded-full px-3 py-2 text-xs">
-          <span>${escapeHtml(l.name)}</span>
-          <button data-delete-label="${escapeHtml(l.name)}" class="font-bold">×</button>
-        </div>
-      `).join('');
-      labelsList.querySelectorAll('[data-delete-label]').forEach(btn => btn.addEventListener('click', () => {
-        const name = btn.getAttribute('data-delete-label');
-        state.labelsList = state.labelsList.filter(l => l.name !== name);
-        renderAll();
-      }));
-      if (labelsInput) labelsInput.value = state.newLabelName;
-    }
-
-    function renderFeedback() {
-      if (feedbackCategorySelect) {
-        const categories = ['Recommendation', 'Bug report', 'Question', 'Other'];
-        feedbackCategorySelect.innerHTML = categories.map(cat => `<option ${cat === state.feedbackCategory ? 'selected' : ''}>${cat}</option>`).join('');
-      }
-      if (feedbackTextarea) feedbackTextarea.value = state.feedbackText;
-      if (feedbackHistory) {
-        feedbackHistory.innerHTML = state.feedbacks.map(f => `<div class="mt-2 text-xs border rounded-xl p-3">${escapeHtml(f.category)}: ${escapeHtml(f.text)}</div>`).join('');
-      }
-    }
-
-    function renderEventPanel() {
-      if (eventTitleInput) eventTitleInput.value = state.edit.title;
-      if (eventDescriptionInput) eventDescriptionInput.value = state.edit.description;
-      if (eventInterpretationHeading) eventInterpretationHeading.textContent = state.edit.title || 'Awaiting Analysis...';
-      if (eventTimeValue) eventTimeValue.textContent = state.edit.time || '12:00 PM';
-      if (eventDurationValue) eventDurationValue.textContent = `${state.edit.duration || 60} Mins`;
-      if (eventDeleteButton) eventDeleteButton.style.display = state.selectedEventId ? 'inline-flex' : 'none';
-      if (eventTroubleshootBox) {
-        eventTroubleshootBox.style.display = state.edit.needsTroubleshoot ? 'flex' : 'none';
-        if (state.edit.needsTroubleshoot) {
-          eventTroubleshootQuestion.textContent = state.edit.troubleshootQuestion || '';
-          eventTroubleshootOptions.innerHTML = (state.edit.troubleshootOptions || []).map(opt => `<button class="text-xs border rounded-lg px-3 py-2">${escapeHtml(opt)}</button>`).join('');
-        }
-      }
-    }
-
-    function openDay(dayStr) {
-      state.selectedDayString = dayStr;
-      state.currentView = 'day';
-      state.activeTab = 'calendar';
-      renderAll();
-    }
-
-    function openEvent(ev) {
-      state.selectedEventId = ev.id;
-      state.edit = {
-        title: ev.title || '',
-        description: ev.description || '',
-        date: ev.date || state.selectedDayString,
-        time: ev.time || '12:00 PM',
-        duration: ev.duration || 60,
-        label: ev.label || 'event',
-        sync: ev.syncPlatform || 'None',
-        importance: ev.importance || 'medium',
-        details: ev.details || '',
-        needsTroubleshoot: !!ev.needsTroubleshoot,
-        troubleshootQuestion: ev.troubleshootQuestion || '',
-        troubleshootOptions: ev.troubleshootOptions || [],
-        resolvedOption: ev.resolvedOption || null
-      };
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function openCreateEvent() {
-      state.selectedEventId = null;
-      state.edit = {
-        title: '',
-        description: '',
-        date: state.selectedDayString,
-        time: '12:00 PM',
-        duration: 60,
-        label: 'event',
-        sync: 'None',
-        importance: 'medium',
-        details: '',
-        needsTroubleshoot: false,
-        troubleshootQuestion: '',
-        troubleshootOptions: [],
-        resolvedOption: null
-      };
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function handleDayTimelineGridClick(e) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickY = e.clientY - rect.top;
-      let hours = Math.floor(clickY / 60);
-      let mins = Math.round((clickY % 60) / 5) * 5;
-      if (mins === 60) { hours += 1; mins = 0; }
-      if (hours >= 24) hours = 23;
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 === 0 ? 12 : hours % 12;
-      const timeStr = `${String(displayHours).padStart(2, '0')}:${String(mins).padStart(2, '0')} ${ampm}`;
-      state.edit = { ...state.edit, date: state.selectedDayString, time: timeStr, duration: 60, title: '', description: '', label: 'event', details: '', sync: 'None', importance: 'medium', needsTroubleshoot: false, resolvedOption: null };
-      state.selectedEventId = null;
-      state.isEventPanelOpen = true;
-      renderAll();
-    }
-
-    function resolveTrouble(item, label, date) {
-      const newEvent = {
-        id: 'e_' + Date.now(),
-        title: item.rawText.split(' ')[0] || 'Resolved Item',
-        description: item.rawText,
-        date: safeDateString(new Date()),
-        time: '12:00 PM',
-        duration: 60,
-        label,
-        importance: 'medium',
-        details: date ? `Resolved: ${date}` : '',
-        syncPlatform: 'None',
-        needsTroubleshoot: false,
-        troubleshootQuestion: '',
-        troubleshootOptions: [],
-        resolvedOption: date || null
-      };
-      state.events = [...state.events, newEvent];
-      state.troubleQueue = state.troubleQueue.filter(q => q.id !== item.id);
-      triggerToast('Trouble resolved and event added.');
-      renderAll();
-    }
-
-    function simulateLocalAI(text) {
-      const lowercase = text.toLowerCase();
-      let label = 'event';
-      if (lowercase.includes('due') || lowercase.includes('deadline') || lowercase.includes('submit')) label = 'due date';
-      else if (lowercase.includes('every') || lowercase.includes('weekly') || lowercase.includes('recurring')) label = 'recurring event';
-      let time = '12:00 PM';
-      const timeMatch = text.match(/(\d+):?(\d+)?\s*(am|pm)/i);
-      if (timeMatch) time = timeMatch[0].toUpperCase();
-      let targetDate = safeDateString(new Date());
-      if (lowercase.includes('tomorrow')) targetDate = safeDateString(new Date(Date.now() + 86400000));
-      let importance = 'medium';
-      if (lowercase.includes('important') || lowercase.includes('urgent') || lowercase.includes('asap')) importance = 'high';
-      const isTroubleshootDemo = lowercase.includes("cafe") && lowercase.includes("mama");
-      return {
-        title: isTroubleshootDemo ? 'Lunch' : (text.split('at')[0].trim().substring(0, 40) || 'Synthesized Task'),
-        date: targetDate,
-        time,
-        duration: 60,
-        label,
-        importance,
-        needsTroubleshoot: isTroubleshootDemo,
-        troubleshootQuestion: isTroubleshootDemo ? "Did you mean at the Cafe or at TGI Fridays?" : "",
-        troubleshootOptions: isTroubleshootDemo ? ["Cafe", "TGI Fridays"] : []
-      };
-    }
-
-    async function analyzeEvent() {
-      const textContext = (eventDescriptionInput.value || '').trim();
-      if (!textContext) {
-        triggerToast('Please write details into the Notecard');
-        return;
-      }
-      const localParsed = simulateLocalAI(textContext);
-      try {
-        const response = await fetch(FEATHERLESS_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${FEATHERLESS_API_KEY}` },
-          body: JSON.stringify({
-            model: FEATHERLESS_MODEL,
-            messages: [
-              { role: "system", content: 'You are a professional calendar scheduling assistant. Parse the calendar entry. Respond ONLY in JSON matching this exact layout: {"title":"string","time":"HH:MM AM/PM","duration":60,"label":"event","importance":"medium"}.' },
-              { role: "user", content: `Analyze this note text: "${textContext}"` }
-            ]
-          })
-        });
-        if (!response.ok) throw new Error('API Limit or Request Error');
-        const data = await response.json();
-        const rawResult = data.choicesz[0].message.content || '';
-        const jsonText = rawResult.includes('{') ? rawResult.slice(rawResult.indexOf('{'), rawResult.lastIndexOf('}') + 1) : '{}';
-        const parsed = JSON.parse(jsonText);
-        state.edit.title = parsed.title || localParsed.title;
-        state.edit.time = parsed.time || localParsed.time;
-        state.edit.duration = parsed.duration || 60;
-        state.edit.label = parsed.label || 'event';
-        state.edit.importance = parsed.importance || 'medium';
-        state.edit.details = 'Analyzed in real-time by NEXTCalendar Llama AI.';
-        state.edit.needsTroubleshoot = textContext.toLowerCase().includes('cafe') && textContext.toLowerCase().includes('mama');
-        state.edit.troubleshootQuestion = state.edit.needsTroubleshoot ? 'Did you mean at the Cafe or at TGI Fridays?' : '';
-        state.edit.troubleshootOptions = state.edit.needsTroubleshoot ? ['Cafe', 'TGI Fridays'] : [];
-        triggerToast('AI analysis complete!');
-      } catch (err) {
-        state.edit.title = localParsed.title;
-        state.edit.time = localParsed.time;
-        state.edit.duration = localParsed.duration;
-        state.edit.label = localParsed.label;
-        state.edit.importance = localParsed.importance;
-        state.edit.details = 'Parsed locally via fallback engine.';
-        state.edit.needsTroubleshoot = localParsed.needsTroubleshoot;
-        state.edit.troubleshootQuestion = localParsed.troubleshootQuestion;
-        state.edit.troubleshootOptions = localParsed.troubleshootOptions;
-        triggerToast('AI offline. Processed via local parser!');
-      }
-      renderAll();
-    }
-
-    function saveEvent() {
-      const title = (eventTitleInput.value || state.edit.title || '').trim() || 'Untitled Event';
-      const description = (eventDescriptionInput.value || state.edit.description || '').trim();
-      const eventData = {
-        id: state.selectedEventId || `e_${Date.now()}`,
-        title,
-        description,
-        date: state.edit.date || state.selectedDayString,
-        time: state.edit.time || '12:00 PM',
-        duration: state.edit.duration || 60,
-        label: state.edit.label || 'event',
-        importance: state.edit.importance || 'medium',
-        details: state.edit.details || '',
-        syncPlatform: state.edit.sync || 'None',
-        needsTroubleshoot: state.edit.needsTroubleshoot || false,
-        troubleshootQuestion: state.edit.troubleshootQuestion || '',
-        troubleshootOptions: state.edit.troubleshootOptions || [],
-        resolvedOption: state.edit.resolvedOption || null
-      };
-      if (state.selectedEventId) {
-        state.events = state.events.map(ev => ev.id === state.selectedEventId ? eventData : ev);
-      } else {
-        state.events = [...state.events, eventData];
-      }
-      state.isEventPanelOpen = false;
-      triggerToast(state.selectedEventId ? 'Event updated.' : 'Event created.');
-      renderAll();
-    }
-
-    function deleteEvent() {
-      if (!state.selectedEventId) return;
-      state.events = state.events.filter(ev => ev.id !== state.selectedEventId);
-      state.isEventPanelOpen = false;
-      triggerToast('Event deleted.');
-      renderAll();
-    }
-
-    function renderThemeControls() {
-      if (themeSettingSelect) themeSettingSelect.value = state.themeMode;
-      if (clock12Button && clock24Button) {
-        clock12Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? '' : 'bg-blue-600 text-white'}`;
-        clock24Button.className = `flex-1 py-2 rounded-xl text-xs font-bold transition border ${state.is24HourClock ? 'bg-blue-600 text-white' : ''}`;
-      }
-      if (compactViewButton) compactViewButton.textContent = state.isCompact ? 'Comfort view' : 'Compact view';
-    }
-
-    function renderCalendarControls() {
-      renderCalendarHeader();
-      renderVisibility();
-      renderThemeControls();
-    }
-
-    function renderAll() {
-      renderCalendarControls();
-      renderMonthView();
-      renderDayView();
-      renderWeekView();
-      renderYearView();
-      renderTroubleshoot();
-      renderOrg();
-      renderLabelsModal();
-      renderFeedback();
-      renderEventPanel();
-      renderToast();
-    }
-
-    createEventButton.addEventListener('click', openCreateEvent);
-    compactViewButton.addEventListener('click', () => { state.isCompact = !state.isCompact; renderAll(); });
-    navCalendar.addEventListener('click', () => { state.activeTab = 'calendar'; state.currentView = 'month'; renderAll(); });
-    navTroubleshoot.addEventListener('click', () => { state.activeTab = 'troubleshoot'; renderAll(); });
-    navLabels.addEventListener('click', () => { state.isLabelsModalOpen = true; renderAll(); });
-    navSettings.addEventListener('click', () => { state.isSettingsModalOpen = true; renderAll(); });
-
-    viewDay.addEventListener('click', () => { state.currentView = 'day'; renderAll(); });
-    viewWeek.addEventListener('click', () => { state.currentView = 'week'; renderAll(); });
-    viewMonth.addEventListener('click', () => { state.currentView = 'month'; renderAll(); });
-    viewYear.addEventListener('click', () => { state.currentView = 'year'; renderAll(); });
-
-    settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) { state.isSettingsModalOpen = false; renderAll(); } });
-    labelsModal.addEventListener('click', (e) => { if (e.target === labelsModal) { state.isLabelsModalOpen = false; renderAll(); } });
-    eventPanel.addEventListener('click', (e) => { if (e.target === eventPanel) { state.isEventPanelOpen = false; renderAll(); } });
-
-    settingsClose.addEventListener('click', () => { state.isSettingsModalOpen = false; renderAll(); });
-    labelsClose.addEventListener('click', () => { state.isLabelsModalOpen = false; renderAll(); });
-    eventClose.addEventListener('click', () => { state.isEventPanelOpen = false; renderAll(); });
-    eventCancelButton.addEventListener('click', () => { state.isEventPanelOpen = false; renderAll(); });
-    eventSaveButton.addEventListener('click', saveEvent);
-    eventDeleteButton.addEventListener('click', deleteEvent);
-    eventAnalyzeButton.addEventListener('click', analyzeEvent);
-
-    labelsAddButton.addEventListener('click', () => {
-      const n = (labelsInput.value || '').trim();
-      if (!n) return;
-      if (state.labelsList.some(l => l.name.toLowerCase() === n.toLowerCase())) return;
-      state.labelsList.push({ name: n, color: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/20' });
-      state.newLabelName = '';
-      if (labelsInput) labelsInput.value = '';
-      renderAll();
-    });
-
-    labelsInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        labelsAddButton.click();
-      }
-    });
-
-    themeSettingSelect.addEventListener('change', (e) => { setThemeMode(e.target.value); renderAll(); });
-    clock12Button.addEventListener('click', () => { state.is24HourClock = false; renderAll(); });
-    clock24Button.addEventListener('click', () => { state.is24HourClock = true; renderAll(); });
-
-    feedbackCategorySelect.addEventListener('change', (e) => { state.feedbackCategory = e.target.value; });
-    feedbackTextarea.addEventListener('input', (e) => { state.feedbackText = e.target.value; });
-    feedbackSubmitButton.addEventListener('click', () => {
-      const text = (state.feedbackText || '').trim();
-      if (!text) return;
-      state.feedbacks.unshift({ category: state.feedbackCategory, text });
-      state.feedbackText = '';
-      triggerToast('Feedback submitted.');
-      renderAll();
-    });
-
-    orgParentalButton.addEventListener('click', () => {
-      state.parentalControlsEnabled = !state.parentalControlsEnabled;
-      triggerToast(state.parentalControlsEnabled ? 'Safeguards enabled.' : 'Safeguards disabled.');
-      renderAll();
-    });
-    orgToggleVisibilityInput.addEventListener('change', () => { state.parentalControlsEnabled = orgToggleVisibilityInput.checked; renderAll(); });
-    orgToggleInvitesInput.addEventListener('change', () => { state.parentalControlsEnabled = orgToggleInvitesInput.checked; renderAll(); });
-
-    dayTimelineGrid.addEventListener('click', handleDayTimelineGridClick);
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === '`') triggerToast('Devtools key detected.');
-    });
-
-    if (themeSettingSelect) {
-      themeSettingSelect.innerHTML = `
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      `;
-    }
-
-    setThemeMode(state.themeMode);
-    renderAll();
-  });
-</script>
-
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+  </script>
 </body>
 </html>
